@@ -8,7 +8,8 @@ import { HttpService } from '../http.service';
 })
 export class BoardComponent implements OnInit {
 
-    board: number[][];
+    orig_board: number[][];
+    new_board: number[][];
     row: number;
     cell_value_9_i: number;
     random: string;
@@ -17,10 +18,13 @@ export class BoardComponent implements OnInit {
       this.cell_value_9_i = 1;
 
       this.random = "hello";
+
+      this.orig_board = this._http.getBoard();
+      this.new_board = {...this.orig_board};
     }
 
     ngOnInit() {
-      this.board = this._http.getBoard();
+
     }
 
     // Set shading
@@ -35,17 +39,35 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      console.log(this.board);
-
+      console.log("new: ");
+      console.log(this.new_board);
+      console.log("old: ");
+      console.log(this.orig_board);
     }
 
     // Bind user input to each sudoku board cell
     onKey(event: any) {
-      console.log(event);
-      console.log(event.target.value+" for id "+event.target.id);
+
+      // Ensure input. Tabs can cause no input.
+      if(event.target.value != "") {
+        let cell_coordinates_string_raw: string = event.target.id;
+        let cell_coordinates_string: string[] = cell_coordinates_string_raw.split("-");
+        let cell_coordinates_number: number[] = this.convert_string_array_to_nums(cell_coordinates_string);
+        let cell_value: number = parseInt(event.target.value);
+
+        this.new_board[cell_coordinates_number[0]][cell_coordinates_number[1]] = cell_value;
+      }
+    }
 
 
-      // this.board += event.target.value;
+    convert_string_array_to_nums(string_array: string[]) {
+      var results: number[] = [];
+      for (let i = 0; i < string_array.length; i++) {
+        const element = string_array[i];
+        results.push(parseInt(element));
+      }
+
+      return results;
     }
 
 

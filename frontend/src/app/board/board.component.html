@@ -1,25 +1,18 @@
 <div class="container">
-  <table *ngIf="board">
-    <tr *ngFor="let row of board; index as i;">
-        <td><input [ngClass]="setClass(0, i)" id="0-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(1, i)" id="1-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(2, i)" id="2-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(3, i)" id="3-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(4, i)" id="4-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(5, i)" id="5-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(6, i)" id="6-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(7, i)" id="7-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <td><input [ngClass]="setClass(8, i)" id="8-{{ i }}" value="{{cell_value_9_i}}"></td>
-        <input (keyup)="onKey($event)">
+  <table *ngIf="orig_board">
+    <tr *ngFor="let row of orig_board; index as i;">
+        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" (keyup)="onKey($event)" value="{{ orig_board[i][0] }}"></td>
+        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" (keyup)="onKey($event)" value="{{ orig_board[i][1] }}"></td>
+        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" (keyup)="onKey($event)" value="{{ orig_board[i][2] }}"></td>
+        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" (keyup)="onKey($event)" value="{{ orig_board[i][3] }}"></td>
+        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" (keyup)="onKey($event)" value="{{ orig_board[i][4] }}"></td>
+        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" (keyup)="onKey($event)" value="{{ orig_board[i][5] }}"></td>
+        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" (keyup)="onKey($event)" value="{{ orig_board[i][6] }}"></td>
+        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" (keyup)="onKey($event)" value="{{ orig_board[i][7] }}"></td>
+        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" (keyup)="onKey($event)" value="{{ orig_board[i][8] }}"></td>
     </tr>
   </table>
 </div>
 <div class="">
   <button (click)="solveBoard()">Solve</button>
 </div>
-
-
-<div class="">
-  test input
-</div>
-<input id="123" (keyup)="onKey($event)">
