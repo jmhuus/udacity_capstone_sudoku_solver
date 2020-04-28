@@ -8,17 +8,10 @@ import { HttpService } from '../http.service';
 })
 export class BoardComponent implements OnInit {
 
-    orig_board: number[][];
-    new_board: number[][];
-    row: number;
-    cell_value_9_i: number;
-    random: string;
+    orig_board: Object;
+    new_board: Object;
 
     constructor(private _http: HttpService) {
-      this.cell_value_9_i = 1;
-
-      this.random = "hello";
-
       this.orig_board = this._http.getBoard();
       this.new_board = JSON.parse(JSON.stringify(this.orig_board)); // clone without object reference
     }
@@ -28,7 +21,7 @@ export class BoardComponent implements OnInit {
     }
 
     // Set shading
-    setClass(column, row=0) {
+    setClass(column, row) {
       let myClasses = {
         grey_cell: (2 < row && row <= 5) || (2 < column && column <= 5),
         white_cell: (2 < row && row <= 5) && (2 < column && column <= 5)
@@ -39,7 +32,10 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      console.log(JSON.stringify(this.new_board));
+      // console.log(JSON.stringify(this.orig_board));
+      // console.log(JSON.stringify(this.new_board));
+      console.log(this.orig_board);
+      console.log(this.new_board);
     }
 
     // Bind user input to each sudoku board cell
