@@ -20,7 +20,7 @@ export class BoardComponent implements OnInit {
       this.random = "hello";
 
       this.orig_board = this._http.getBoard();
-      this.new_board = {...this.orig_board};
+      this.new_board = JSON.parse(JSON.stringify(this.orig_board)); // clone without object reference
     }
 
     ngOnInit() {
@@ -39,10 +39,7 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      console.log("new: ");
-      console.log(this.new_board);
-      console.log("old: ");
-      console.log(this.orig_board);
+      console.log(JSON.stringify(this.new_board));
     }
 
     // Bind user input to each sudoku board cell
@@ -69,6 +66,4 @@ export class BoardComponent implements OnInit {
 
       return results;
     }
-
-
 }
