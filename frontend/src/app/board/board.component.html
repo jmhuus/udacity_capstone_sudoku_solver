@@ -1,0 +1,25 @@
+<div class="container">
+  <table *ngIf="board">
+    <tr *ngFor="let row of board; index as i;">
+        <td><input [ngClass]="setClass(0, i)" id="0-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(1, i)" id="1-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(2, i)" id="2-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(3, i)" id="3-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(4, i)" id="4-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(5, i)" id="5-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(6, i)" id="6-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(7, i)" id="7-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <td><input [ngClass]="setClass(8, i)" id="8-{{ i }}" value="{{cell_value_9_i}}"></td>
+        <input (keyup)="onKey($event)">
+    </tr>
+  </table>
+</div>
+<div class="">
+  <button (click)="solveBoard()">Solve</button>
+</div>
+
+
+<div class="">
+  test input
+</div>
+<input id="123" (keyup)="onKey($event)">

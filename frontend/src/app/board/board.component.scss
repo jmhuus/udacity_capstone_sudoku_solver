@@ -1,0 +1,43 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  position: relative;
+  width: auto;
+  margin: 2em;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  // padding: 0px;
+  margin: 5%;
+}
+
+input {
+  background: white;
+  width: 70px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.5rem;
+  border: none;
+}
+
+
+.center {
+  background: rgb(200, 200, 200);
+}
+
+.grey_cell {
+    background: rgb(220, 220, 220);
+}
+
+.white_cell {
+    background: white;
+}
+
+button {
+  width: 100px;
+  height: 60px;
+  position: relative;
+  margin: 2em;
+}

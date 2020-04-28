@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "capstone-sudoku-frontend"
+    }
+  },
+  "defaultProject": "capstone-sudoku-frontend",
+  "cli": {
+    "analytics": false
+  }
 }
