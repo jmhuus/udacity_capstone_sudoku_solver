@@ -24,4 +24,8 @@ export class HttpService {
       8: [0,0,0,0,0,0,0,0,0],
     }
   }
+
+  solveBoard(board: Object) {
+    
+  }
 }

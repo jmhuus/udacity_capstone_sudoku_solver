@@ -32,10 +32,8 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      // console.log(JSON.stringify(this.orig_board));
-      // console.log(JSON.stringify(this.new_board));
-      console.log(this.orig_board);
-      console.log(this.new_board);
+      var solution = this._http.solveBoard(this.new_board);
+      console.log(solution);
     }
 
     // Bind user input to each sudoku board cell
