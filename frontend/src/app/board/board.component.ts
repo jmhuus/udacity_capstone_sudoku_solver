@@ -17,7 +17,7 @@ export class BoardComponent implements OnInit {
     new_board: Object;
     readonly board_size = Array(9).fill().map((x,i)=>i);
 
-    test_response: Observable<Post[]>;
+    test_response: Observable;
 
     constructor(private _http: HttpService) {
       this.orig_board = this._http.getBoard();
@@ -41,6 +41,19 @@ export class BoardComponent implements OnInit {
     // Solve the sudoku puzzle
     solveBoard() {
       this.test_response = this._http.solveBoard(this.new_board);
+      this.test_response.subscribe(
+        value => {
+          this.showMeMyData(value);
+        },
+        error => console.log("error: "+error),
+        _ => console.log("complete")
+      );
+    }
+
+
+    showMeMyData(data){
+      console.log(data["success"]);
+      console.log(data["message"]);
     }
 
     // Bind user input to each sudoku board cell

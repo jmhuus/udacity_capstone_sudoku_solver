@@ -31,9 +31,9 @@ export class HttpService {
   }
 
   solveBoard(board: Object) {
-    var solve_url: string = "http://127.0.0.1:8000";
+    var solve_url: string = "http://127.0.0.1:8000/";
     var test_url: string = "https://jsonplaceholder.typicode.com/posts";
 
-    return this.http.get<Post[]>(test_url);
+    return this.http.get(solve_url);
   }
 }

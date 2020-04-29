@@ -13,7 +13,10 @@ migrate = Migrate(app, db)
 
 @app.route('/')
 def get_greeting():
-    return "Not implemented"
+    return jsonify({
+        "success": True,
+        "message": "not implemented"
+    }), 200
 
 
 # Solve the sudoku board with DFS recursion
