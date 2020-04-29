@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
+
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
+import { Post } from '../post';
+import { Observable } from 'rxjs/Observable';
 
 
 @Injectable({
@@ -30,6 +34,6 @@ export class HttpService {
     var solve_url: string = "http://127.0.0.1:8000";
     var test_url: string = "https://jsonplaceholder.typicode.com/posts";
 
-    return this.http.get(test_url);
+    return this.http.get<Post[]>(test_url);
   }
 }

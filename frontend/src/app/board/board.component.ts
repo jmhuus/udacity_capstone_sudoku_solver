@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+
+
 import { HttpService } from '../http.service';
+import { Post } from '../post';
+import { Observable } from 'rxjs/Observable';
+
 
 @Component({
   selector: 'app-board',
@@ -12,7 +17,7 @@ export class BoardComponent implements OnInit {
     new_board: Object;
     readonly board_size = Array(9).fill().map((x,i)=>i);
 
-    test_response: any;
+    test_response: Observable<Post[]>;
 
     constructor(private _http: HttpService) {
       this.orig_board = this._http.getBoard();

@@ -28,15 +28,40 @@ class Person(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    catchphrase = Column(String)
+    solved_boards_count = Column(String)
 
-def __init__(self, name, catchphrase=""):
-    self.name = name
-    self.catchphrase = catchphrase
+    def __init__(self, name):
+        self.name = name
+
+    def format(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'solved_boards_count': self.solved_boards_count
+        }
+
+    def __repr__(self):
+        return f'<Person {self.id} {self.name} {self.solved_boards_count}>'
 
 
-def format(self):
-    return {
-        'id': self.id,
-        'name': self.name,
-        'catchphrase': self.catchphrase}
+"""
+Sudoku Board
+Stores boards that users have solved using this api.
+"""
+class SudokuBoard(db.Model):
+    __tablename__ = "SudokuBoard"
+
+    id = Column(Integer, primary_key=True)
+    board_json = Column(String, nullable=False)
+
+    def __init__(self, board_json):
+        self.board_json = board_json
+
+    def format(self):
+        return {
+            "id": self.id,
+            "board": self.board_json
+        }
+
+    def __repr__(self):
+        return f'<SudokuBoard {self.id} {self.board_json}>'
