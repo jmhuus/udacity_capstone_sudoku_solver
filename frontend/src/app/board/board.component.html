@@ -1,6 +1,6 @@
 <div class="container">
   <table *ngIf="orig_board">
-    <tr *ngFor="let row of orig_board; index as i;">
+    <tr *ngFor="let row of board_size; index as i;">
         <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" (keyup)="onKey($event)" value="{{ orig_board[i][0] }}"></td>
         <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" (keyup)="onKey($event)" value="{{ orig_board[i][1] }}"></td>
         <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" (keyup)="onKey($event)" value="{{ orig_board[i][2] }}"></td>
@@ -15,4 +15,12 @@
 </div>
 <div class="">
   <button (click)="solveBoard()">Solve</button>
+</div>
+
+
+<div class="">
+  test http result
+  <p *ngFor="let post of test_response | async">
+    {{ post | json }}
+  </p>
 </div>

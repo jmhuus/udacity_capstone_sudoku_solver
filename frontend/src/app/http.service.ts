@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { tap, map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+
+  }
 
   getBoard() {
-    // Original example from tut
-    // http
-
     return {
       0: [0,0,0,0,0,0,0,0,0],
       1: [0,0,0,0,0,0,0,0,0],
@@ -26,6 +27,9 @@ export class HttpService {
   }
 
   solveBoard(board: Object) {
-    
+    var solve_url: string = "http://127.0.0.1:8000";
+    var test_url: string = "https://jsonplaceholder.typicode.com/posts";
+
+    return this.http.get(test_url);
   }
 }

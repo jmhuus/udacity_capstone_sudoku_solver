@@ -10,6 +10,9 @@ export class BoardComponent implements OnInit {
 
     orig_board: Object;
     new_board: Object;
+    readonly board_size = Array(9).fill().map((x,i)=>i);
+
+    test_response: any;
 
     constructor(private _http: HttpService) {
       this.orig_board = this._http.getBoard();
@@ -32,8 +35,7 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      var solution = this._http.solveBoard(this.new_board);
-      console.log(solution);
+      this.test_response = this._http.solveBoard(this.new_board);
     }
 
     // Bind user input to each sudoku board cell
