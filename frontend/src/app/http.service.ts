@@ -16,6 +16,7 @@ export class HttpService {
 
   }
 
+  // TODO(jordanhuus): implement API and request
   getBoard() {
     return {
       0: [0,0,0,0,0,0,0,0,0],
@@ -30,10 +31,26 @@ export class HttpService {
     }
   }
 
+  // Post request to solve the sudoku puzzle
   solveBoard(board: Object) {
-    var solve_url: string = "http://127.0.0.1:8000/";
-    var test_url: string = "https://jsonplaceholder.typicode.com/posts";
+    console.log("from http.service.ts");
 
-    return this.http.get(solve_url);
+    console.log(board);
+
+    // var solve_url: string = "http://127.0.0.1:8000/solve-board";
+    //
+    // let httpOptions = {
+    //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    // };
+    //
+    // let body = {
+    //     "message": "not implemented",
+    //     "success": true
+    // }
+    //
+    // console.log(JSON.stringify(board));
+    //
+    //
+    // return this.http.post(solve_url, JSON.stringify(board), httpOptions);
   }
 }

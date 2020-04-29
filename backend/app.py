@@ -1,8 +1,11 @@
 import os
-from flask import Flask, jsonify
+import json
+from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from models import setup_db, Person, db
 from flask_cors import CORS
+
+import pprint as pp
 
 
 app = Flask(__name__)
@@ -20,14 +23,25 @@ def get_greeting():
 
 
 # Solve the sudoku board with DFS recursion
-@app.route('/solve', methods=["POST"])
+@app.route('/solve-board', methods=["POST"])
 def solve_board():
+    i = 1
     data = json.loads(request.data)
-    print(data)
+
+    print(f"printing output. This is the {i} time")
+    pp.pprint(data)
+    print(request.data)
+
+    i += 1
+
+
     # board =  request.get_json()["board"]
     # solver = Solver(board, 9)
     # solved_grid = solver.solve()
-    return jsonify(solved_grid)
+    return jsonify({
+        "success": True,
+        "message": "not implemented, aahhhh yeeee!!"
+    }), 200
 
 
 # Retrieve a board from the database

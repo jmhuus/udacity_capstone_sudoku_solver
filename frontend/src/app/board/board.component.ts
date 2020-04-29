@@ -40,21 +40,27 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
+      console.log("from board.component.ts");
+      console.log(this.new_board);
+
       this.test_response = this._http.solveBoard(this.new_board);
-      this.test_response.subscribe(
-        value => {
-          this.showMeMyData(value);
-        },
-        error => console.log("error: "+error),
-        _ => console.log("complete")
-      );
+      // this.test_response.subscribe(
+      //   value => {
+      //     this.displaySolution(value);
+      //   },
+      //   error => console.log("error: "+error),
+      //   _ => console.log("complete")
+      // );
     }
 
+    // Display the solution
+    displaySolution(solution_board: Object) {
+      console.log("solution working!!");
+      console.log(solution_board);
 
-    showMeMyData(data){
-      console.log(data["success"]);
-      console.log(data["message"]);
+      // TODO(jordanhuus): implement display of solved board
     }
+
 
     // Bind user input to each sudoku board cell
     onKey(event: any) {
