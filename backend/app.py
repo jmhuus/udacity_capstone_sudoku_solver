@@ -30,8 +30,6 @@ def solve_board():
     # Retrieve request data
     data = json.loads(request.data)
 
-    pp.pprint(data["board"])
-
     # Solve sudoku board
     solver = Solver(data["board"], 9)
     print("Solving...")
