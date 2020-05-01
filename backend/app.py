@@ -30,6 +30,7 @@ def solve_board():
     # Retrieve request data
     data = json.loads(request.data)
 
+    # TODO(jordanhuus): migrate this to SudokuBoard model object
     # Solve sudoku board
     solver = Solver(data["board"], 9)
     print("Solving...")
@@ -56,7 +57,21 @@ def get_new_board():
 
 # Retrieve a board from the database
 @app.route('/board-get', methods=["POST"])
-def be_cool():
+def get_board_from_database():
+    return "Not implemented"
+
+
+# Retrieve a board from the database
+@app.route('/board-save', methods=["POST"])
+def save_board():
+    # # Retrieve board model object and save
+    # data = json.loads(request.data)
+    # if data["board_id"] is not None:
+    #     board = SudokuBoard.query.get(data["board_id"])
+    #     board.add()
+    # else:
+    #     board = SudokuBoard(data["board"])
+    #     board.update()
 
     return "Not implemented"
 

@@ -65,3 +65,17 @@ class SudokuBoard(db.Model):
 
     def __repr__(self):
         return f'<SudokuBoard {self.id} {self.board_json}>'
+
+    # TODO(jordanhuus): add board solver
+
+    # # TODO(jordanhuus): implement db session addition
+    # def insert(self):
+    #     try:
+    #         db.session.add()
+    #         db.session.commit()
+    #     except Exception as e:
+    #         abort()
+    #
+    # # TODO(jordanhuus): implement db session update
+    # def update(self):
+    #
