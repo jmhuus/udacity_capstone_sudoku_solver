@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from models import setup_db, Person, db
 from flask_cors import CORS
+from solver.solver import Solver, generate_new_board
+
 
 import pprint as pp
 
@@ -25,27 +27,37 @@ def get_greeting():
 # Solve the sudoku board with DFS recursion
 @app.route('/solve-board', methods=["POST"])
 def solve_board():
-    i = 1
+    # Retrieve request data
     data = json.loads(request.data)
 
-    print(f"printing output. This is the {i} time")
-    pp.pprint(data)
-    print(request.data)
+    pp.pprint(data["board"])
 
-    i += 1
+    # Solve sudoku board
+    solver = Solver(data["board"], 9)
+    print("Solving...")
+    solved_board = solver.solve()
+    print("Solve complete!!")
 
-
-    # board =  request.get_json()["board"]
-    # solver = Solver(board, 9)
-    # solved_grid = solver.solve()
     return jsonify({
         "success": True,
-        "message": "not implemented, aahhhh yeeee!!"
+        "solved_board": solved_board
+    }), 200
+
+
+# Solve the sudoku board with DFS recursion
+@app.route('/board-new', methods=["POST"])
+def get_new_board():
+    data = json.loads(request.data)
+    new_board_data = generate_new_board(data["difficulty"])
+    return jsonify({
+        "success": True,
+        "board": new_board_data["board"],
+        "solved_board": new_board_data["solved_board"]
     }), 200
 
 
 # Retrieve a board from the database
-@app.route('/get_board', methods=["POST"])
+@app.route('/board-get', methods=["POST"])
 def be_cool():
 
     return "Not implemented"

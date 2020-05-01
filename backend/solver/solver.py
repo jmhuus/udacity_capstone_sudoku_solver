@@ -1,4 +1,8 @@
-import pprint
+import pprint as pp
+import math, random
+import json
+from copy import deepcopy
+
 
 def print_board(grid):
     for row in range(9):
@@ -9,13 +13,41 @@ class Solver():
 
 
     def __init__(self, grid, board_size):
-        self.grid = grid
+        self.grid = self.convert_from_json(grid)
         self.MIN = 1
         self.MAX = board_size
 
 
     def __repr__(self):
         pprint.PrettyPrinter(self.grid)
+
+
+    def convert_from_json(self, grid_json):
+        """Returns a converted JSON formatted sudoku board into a two-
+        dimensional python list.
+
+        Args:
+            grid_json: JSON formatted sudoku board.
+
+        Returns:
+            Two-dimensional python list sudoku board representation.
+
+        """
+        try:
+            converted_board = [0,1,2,3,4,5,6,7,8]
+            for row_index, row_values in grid_json.items():
+                row = []
+                for row_value in row_values:
+                    if row_value != "":
+                        row.append(int(row_value))
+                    else:
+                        row.append(None)
+                converted_board[int(row_index)] = row
+
+        except AttributeError as ae: # Board format already 2D list
+            converted_board = grid_json
+
+        return converted_board
 
 
     def solve(self):
@@ -76,7 +108,6 @@ class Solver():
 
             # Next available address found, return result
             if self.grid[row][col] == None:
-                print(f"next available address is row={row} column={col}")
                 return [row, col]
 
 
@@ -118,7 +149,74 @@ class Solver():
                         if self.grid[row][column] != None:
                             grid_list.append(self.grid[row][column])
 
-                print(grid_list)
                 if len(grid_list) != len(set(grid_list)):
                     return False
         return True
+
+
+def generate_new_board(difficulty):
+    """
+    Generates a new sudoku board based on difficulty.
+        1). Randomly place numbers on the board
+        2). Solve the board - this is the new board
+        3). Remove numbers based on chosen difficulty
+        4). Return both versions of the sudoku board
+
+    Args:
+        difficulty: string 'easy', 'medium', or 'hard'.
+
+    Returns:
+        Dictionary of the "solved_board" and "board".
+    """
+    new_board_data = {
+        "solved_board": None,
+        "board": None
+    }
+
+    board = [
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None]
+    ]
+
+    # Generate random numbers on the board to create a unique result
+    board[0][0] = math.floor((random.random() * 9)+1)
+    board[4][1] = math.floor((random.random() * 9)+1)
+    board[8][2] = math.floor((random.random() * 9)+1)
+
+    # Solve the board
+    solver = Solver(board, 9)
+    board = solver.solve()
+    new_board_data["solved_board"] = deepcopy(board)
+
+    # Determine board density based on difficulty
+    if difficulty == "hard":
+        numbers_left = 30
+    elif difficulty == "medium":
+        numbers_left = 55
+    else: # easy
+        numbers_left = 70
+
+    # Remove numbers from the board
+    for _ in range(numbers_left):
+        # Remove snake-based location starting from the top left
+        snake_location = 0
+        snake_locations_removed = []
+
+        # Remove random cells based on snake-based location
+        cell_to_remove = math.floor((random.random() * 81)+1)
+        for row_index in range(len(board)):
+            for column_index in range(len(board[row_index])):
+                if cell_to_remove == snake_location:
+                    board[row_index][column_index] = None
+                    snake_locations_removed.append(cell_to_remove)
+                snake_location += 1
+
+    new_board_data["board"] = board
+    return new_board_data

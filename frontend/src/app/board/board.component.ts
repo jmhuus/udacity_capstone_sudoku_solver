@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-
 import { HttpService } from '../http.service';
-import { Post } from '../post';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -13,15 +10,11 @@ import { Observable } from 'rxjs/Observable';
 })
 export class BoardComponent implements OnInit {
 
-    orig_board: Object;
-    new_board: Object;
-    readonly board_size = Array(9).fill().map((x,i)=>i);
-
-    test_response: Observable;
+    board: Object;
+    readonly board_size = [1,2,3,4,5,6,7,8,9];
 
     constructor(private _http: HttpService) {
-      this.orig_board = this._http.getBoard();
-      this.new_board = JSON.parse(JSON.stringify(this.orig_board)); // clone without object reference
+      this.board = this._http.getBoard();
     }
 
     ngOnInit() {
@@ -40,50 +33,52 @@ export class BoardComponent implements OnInit {
 
     // Solve the sudoku puzzle
     solveBoard() {
-      console.log("from board.component.ts");
-      console.log(this.new_board);
+      // Sanitize board data; ensure that all input is the same format
+      for (let row = 0; row < Object.keys(this.board).length; row++) {
+        for (let column = 0; column < this.board[row].length; column++) {
+          const element = this.board[row][column];
+          if(typeof element == "string"){
+            console.log("converting "+element);
+            this.board[row][column] = parseInt(element);
+          }
+        }
+      }
 
-      this.test_response = this._http.solveBoard(this.new_board);
-      // this.test_response.subscribe(
-      //   value => {
-      //     this.displaySolution(value);
-      //   },
-      //   error => console.log("error: "+error),
-      //   _ => console.log("complete")
-      // );
+      let response: Observable<Object> = this._http.solveBoard(this.board);
+      response.subscribe(
+        value => {
+          this.displayBoardData(value, true);
+        },
+        error => console.log("error: "+error),
+        () => console.log("complete")
+      );
     }
 
     // Display the solution
-    displaySolution(solution_board: Object) {
-      console.log("solution working!!");
-      console.log(solution_board);
+    displayBoardData(response: any, show_solved: boolean) {
+      console.log(response);
 
       // TODO(jordanhuus): implement display of solved board
-    }
-
-
-    // Bind user input to each sudoku board cell
-    onKey(event: any) {
-
-      // Ensure input. Tabs can cause no input.
-      if(event.target.value != "") {
-        let cell_coordinates_string_raw: string = event.target.id;
-        let cell_coordinates_string: string[] = cell_coordinates_string_raw.split("-");
-        let cell_coordinates_number: number[] = this.convert_string_array_to_nums(cell_coordinates_string);
-        let cell_value: number = parseInt(event.target.value);
-
-        this.new_board[cell_coordinates_number[0]][cell_coordinates_number[1]] = cell_value;
+      if(show_solved){
+        this.board = response["solved_board"];
+      } else {
+        this.board = response["board"];
       }
     }
 
+    // Retrieve a new board for the user to solve
+    newBoard() {
+      let response: Observable<Object> = this._http.getNewBoard();
+      response.subscribe(
+        value => {
+          this.displayBoardData(value, false);
+        },
+        error => console.log("error: "+error),
+        () => console.log("complete")
+      );
+    }
 
-    convert_string_array_to_nums(string_array: string[]) {
-      var results: number[] = [];
-      for (let i = 0; i < string_array.length; i++) {
-        const element = string_array[i];
-        results.push(parseInt(element));
-      }
-
-      return results;
+    saveBoard() {
+      console.log("not implemented");
     }
 }
