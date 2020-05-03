@@ -56,8 +56,8 @@ class SudokuBoard(db.Model):
     def __init__(self, difficulty):
         self.difficulty = difficulty
         new_board = generate_new_board(self.difficulty)
-        self.board_json = jsonify(new_board["board"])
-        self.solved_board = jsonify(new_board["solved_board"])
+        self.board_json = new_board["board"]
+        self.solved_board = new_board["solved_board"]
 
     def format(self):
         return {

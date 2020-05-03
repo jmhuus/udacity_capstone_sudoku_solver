@@ -66,6 +66,9 @@ def create_app():
         data = json.loads(request.data)
         board = SudokuBoard.query.get(data["board_id"])
         board.board_json = data["board_json"]
+
+        print("pp.pprint(board.board_json)")
+        pp.pprint(board.board_json)
         return jsonify(board.format()), 200
 
     return app

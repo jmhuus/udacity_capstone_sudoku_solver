@@ -1,20 +1,23 @@
 <div class="container">
-  <table *ngIf="board">
+  <table *ngIf="board_displayed">
     <tr *ngFor="let row of board_size; index as i;">
-        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" [(ngModel)]="board[i][0]"></td>
-        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" [(ngModel)]="board[i][1]"></td>
-        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" [(ngModel)]="board[i][2]"></td>
-        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" [(ngModel)]="board[i][3]"></td>
-        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" [(ngModel)]="board[i][4]"></td>
-        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" [(ngModel)]="board[i][5]"></td>
-        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" [(ngModel)]="board[i][6]"></td>
-        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" [(ngModel)]="board[i][7]"></td>
-        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" [(ngModel)]="board[i][8]"></td>
+        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" [(ngModel)]="board_displayed[i][0]"></td>
+        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" [(ngModel)]="board_displayed[i][1]"></td>
+        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" [(ngModel)]="board_displayed[i][2]"></td>
+        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" [(ngModel)]="board_displayed[i][3]"></td>
+        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" [(ngModel)]="board_displayed[i][4]"></td>
+        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" [(ngModel)]="board_displayed[i][5]"></td>
+        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" [(ngModel)]="board_displayed[i][6]"></td>
+        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" [(ngModel)]="board_displayed[i][7]"></td>
+        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" [(ngModel)]="board_displayed[i][8]"></td>
     </tr>
   </table>
 </div>
 <div class="container">
   <button (click)="solveBoard()">Solve</button>
   <button (click)="newBoard()">New Board</button>
+  <button (click)="resetBoard()">Reset Board</button>
   <button (click)="saveBoard()">Save Board</button>
+  <button (click)="getBoard()">Get Board</button>
+  <h3>{{ user_message }}</h3>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
+import { Board } from './board';
 
 
 @Component({
@@ -10,12 +11,14 @@ import { Observable } from 'rxjs';
 })
 export class BoardComponent implements OnInit {
 
-    original_board: Object;
-    board: Object;
+    board_displayed: Object;
+    board: Board;
+    user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
 
     constructor(private _http: HttpService) {
-      this.board = this._http.getBoard();
+      this.board_displayed = Board.getBlankBoard();
+      this.user_message = "";
     }
 
     ngOnInit() {
@@ -33,53 +36,92 @@ export class BoardComponent implements OnInit {
 
 
     // Solve the sudoku puzzle
-    solveBoard() {
-      let response: Observable<Object> = this._http.solveBoard(this.original_board);
-      response.subscribe(
-        value => {
-          console.log(value);
-          this.displayBoardData(value, true);
-        },
-        error => console.log("error: "+error),
-        () => console.log("complete")
-      );
+    solveRandomBoard() {
+      this.user_message = "not implemented";
+
+      // let response: Observable<Object> = this._http.solveBoard(this.original_board);
+      // response.subscribe(
+      //   value => {
+      //     this.board_displayed = this.board.board;
+      //   },
+      //   error => console.log("error: "+error),
+      //   () => console.log("complete")
+      // );
     }
 
-    // Display the solution
-    displayBoardData(response: any, show_solved: boolean) {
-      if(show_solved){
-        this.board = JSON.parse(JSON.stringify(response["solved_board"]));
-      } else {
-        this.board = JSON.parse(JSON.stringify(response["board"]));
-      }
+    solveBoard() {
+      this.board_displayed = JSON.parse(JSON.stringify(this.board.board_solved));
     }
 
     // Retrieve a new board for the user to solve
     newBoard() {
-      let response: Observable<Object> = this._http.getNewBoard();
+      let response: Observable<Object> = this._http.getNewBoard("easy"); // TODO(jordanhuus): remove hard code
       response.subscribe(
         value => {
-          this.original_board = value["board"];
-          this.displayBoardData(value, false);
+          this.board = new Board(
+            value["board_id"],
+            value["board_json"],
+            value["board_json_solved"],
+            value["board_json"]);
+          this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
         },
         error => console.log("error: "+error),
         () => console.log("complete")
       );
     }
 
+    // Display the original version after initially created
+    resetBoard() {
+      this.board_displayed = JSON.parse(JSON.stringify(this.board.board_original));
+    }
+
+    // Save this.board's progress
     saveBoard() {
-      console.log("not implemented");
+      this.board.board = this.sanitizeBoardData(this.board_displayed);
+      let response = this._http.saveBoard(this.board);
+      response.subscribe(
+        value => {
+          this.user_message = "Saved!";
+        },
+        error => console.log("error: "+error),
+        () => console.log("complete")
+      );
     }
 
     // Sanitize board data; ensure that all input is the same format
-    sanitizeBoard() {
-      for (let row = 0; row < Object.keys(this.board).length; row++) {
-        for (let column = 0; column < this.board[row].length; column++) {
-          const element = this.board[row][column];
+    sanitizeBoardData(boardData: Object) {
+      let sanitizedBoardData: Object = Board.getBlankBoard();
+
+      for (let row = 0; row < Object.keys(boardData).length; row++) {
+        for (let column = 0; column < boardData[row].length; column++) {
+          const element = boardData[row][column];
           if(typeof element == "string"){
-            this.board[row][column] = parseInt(element);
+            sanitizedBoardData[row][column] = parseInt(element);
+          } else {
+            sanitizedBoardData[row][column] = element;
           }
         }
       }
+
+      return sanitizedBoardData
+    }
+
+    // Get a specific board from the server
+    getBoard() {
+      let response = this._http.getBoard(9);
+      response.subscribe(
+        value => {
+          console.log(value);
+
+          this.board = new Board(
+            value["board_id"],
+            value["board_json"],
+            value["board_json_solved"],
+            value["board_json"]);
+          this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
+        },
+        error => console.log("error: "+error),
+        () => console.log("complete")
+      );
     }
 }

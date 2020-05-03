@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Board } from './board/board';
+
 
 
 
@@ -15,21 +17,6 @@ export class HttpService {
 
   }
 
-  // TODO(jordanhuus): implement API and request
-  getBoard() {
-    return {
-      0: ["","","","","","","","",""],
-      1: ["","","","","","","","",""],
-      2: ["","","","","","","","",""],
-      3: ["","","","","","","","",""],
-      4: ["","","","","","","","",""],
-      5: ["","","","","","","","",""],
-      6: ["","","","","","","","",""],
-      7: ["","","","","","","","",""],
-      8: ["","","","","","","","",""],
-    }
-  }
-
   // Post request to solve the sudoku puzzle
   solveBoard(board: Object): Observable<Object> {
     let httpOptions = {
@@ -42,13 +29,39 @@ export class HttpService {
   }
 
   // Post request to solve the sudoku puzzle
-  getNewBoard(): Observable<Object> {
+  getNewBoard(difficulty: string): Observable<Object> {
     let httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
     let body = {
-      "difficulty": "easy"
+      "difficulty": difficulty
     }
     return this.http.post(this.solve_url+"/board-new", JSON.stringify(body), httpOptions);
+  }
+
+  // Save the current boards progress
+  saveBoard(board: Board): Observable<Object> {
+    console.log(board.format());
+
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    let body = {
+      "board_id": board.id,
+      "board_json": board.board
+    }
+    return this.http.put(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
+  }
+
+  // Get an existing board's data
+  getBoard(board_id: number) {
+
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    let body = {
+      "board_id": board_id
+    }
+    return this.http.post(this.solve_url+"/board-get", JSON.stringify(body), httpOptions);
   }
 }
