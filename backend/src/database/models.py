@@ -18,15 +18,15 @@ def setup_db(app):
 
 
 '''
-Person
-Have title and release year
+User
+Individual who is playing Sudoku games.
 '''
-class Person(db.Model):
-    __tablename__ = 'People'
+class User(db.Model):
+    __tablename__ = 'User'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    solved_boards_count = Column(String)
+    sudoku_boards = db.relationship("SudokuBoard", backref="user")
 
     def __init__(self, name):
         self.name = name
@@ -39,7 +39,7 @@ class Person(db.Model):
         }
 
     def __repr__(self):
-        return f'<Person {self.id} {self.name} {self.solved_boards_count}>'
+        return f'<User {self.id} {self.name} {self.solved_boards_count}>'
 
 
 """
@@ -52,12 +52,14 @@ class SudokuBoard(db.Model):
     id = Column(Integer, primary_key=True)
     board_json = Column(ARRAY(Integer), nullable=False)
     solved_board = Column(ARRAY(Integer), nullable=False)
+    user_id = Column(Integer, db.ForeignKey("User.id"), nullable=False)
 
     def __init__(self, difficulty):
         self.difficulty = difficulty
         new_board = generate_new_board(self.difficulty)
         self.board_json = new_board["board"]
         self.solved_board = new_board["solved_board"]
+        self.user_id = 1
 
     def format(self):
         return {

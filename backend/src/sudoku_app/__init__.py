@@ -1,7 +1,7 @@
 import os
 import json
 from flask import Flask, jsonify, request
-from database.models import setup_db, Person, SudokuBoard, db
+from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
 from flask_migrate import Migrate
