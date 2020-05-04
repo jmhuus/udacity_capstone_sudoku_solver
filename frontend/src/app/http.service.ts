@@ -54,7 +54,7 @@ export class HttpService {
   }
 
   // Get an existing board's data
-  getBoard(board_id: number) {
+  getBoard(board_id: number): Observable<Object> {
 
     let httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })

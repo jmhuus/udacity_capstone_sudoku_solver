@@ -25,17 +25,19 @@ class User(db.Model):
     __tablename__ = 'User'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    jwt = Column(String, nullable=True)
     sudoku_boards = db.relationship("SudokuBoard", backref="user")
 
-    def __init__(self, name):
+    def __init__(self, first_name, last_name):
         self.name = name
 
     def format(self):
         return {
             'id': self.id,
-            'name': self.name,
-            'solved_boards_count': self.solved_boards_count
+            'first_name': self.first_name,
+            'last_name': self.last_name
         }
 
     def __repr__(self):
