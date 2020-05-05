@@ -66,9 +66,9 @@ export class AuthService {
     return link;
   }
 
-  getUserName(): string {
+  getUserInfo(): string {
     if (this.payload != null) {
-      return this.payload["http://www.jordanhuus.com/user_name"];
+      return this.payload["http://www.jordanhuus.com/user_info"];
     }
   }
 }

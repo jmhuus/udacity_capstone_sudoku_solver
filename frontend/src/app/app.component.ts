@@ -8,7 +8,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   title: string = 'Sudoku Solver Capstone';
-  user_name: string = '';
+  user_info: Object;
   loginUrl: string = '';
 
   constructor(private auth: AuthService) {
@@ -17,7 +17,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.auth.check_token_fragment();
-    this.user_name = this.auth.getUserName();
+    this.user_info = this.auth.getUserInfo();
     this.loginUrl = this.auth.getLoginUrl();
     console.log(this.loginUrl);
 
@@ -25,6 +25,6 @@ export class AppComponent {
 
   logout(): void {
     this.auth.logout();
-    this.user_name = '';
+    this.user_info = null;
   }
 }

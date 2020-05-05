@@ -3,10 +3,11 @@
         <a href="#" class="logo">Sudoku Solver</a>
         <nav>
             <ul>
-                <li><a>{{ user_name }}</a></li>
                 <li><a href="#" routerLink="/">Solver</a></li>
-                <li><a [href]="loginUrl">Login</a></li>
-                <li *ngIf="user_name"><a href="" (click)="logout()">Logout</a></li>
+                <li *ngIf="!user_info"><a [href]="loginUrl">Login</a></li>
+                <li *ngIf="user_info"><img [src]="user_info['picture']" alt=""></li>
+                <li *ngIf="user_info"><a>{{ user_info['name'] }}</a></li>
+                <li *ngIf="user_info"><a href="" (click)="logout()">Logout</a></li>
             </ul>
         </nav>
     </div>
