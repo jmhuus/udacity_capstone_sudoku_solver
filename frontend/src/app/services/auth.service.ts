@@ -62,7 +62,7 @@ export class AuthService {
     link += 'audience=' + 'sudoku-api' + '&';
     link += 'response_type=token&';
     link += 'client_id=' + 'hTHs2lbL26VDIPLLzFffuWhsoJItrYDG' + '&';
-    link += 'redirect_uri=' + 'http://localhost:4200/login-result';
+    link += 'redirect_uri=' + 'http://localhost:4200/';
     return link;
   }
 
