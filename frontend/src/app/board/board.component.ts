@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../services/http.service';
 import { Observable } from 'rxjs';
 import { Board } from './board';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class BoardComponent implements OnInit {
     user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
 
-    constructor(private _http: HttpService) {
+    constructor(private _http: HttpService, public auth: AuthService) {
       this.board_displayed = Board.getBlankBoard();
       this.user_message = "";
     }
@@ -50,12 +51,14 @@ export class BoardComponent implements OnInit {
     }
 
     solveBoard() {
-      this.board_displayed = JSON.parse(JSON.stringify(this.board.board_solved));
+      this.board_displayed = JSON.parse(
+        JSON.stringify(this.board.board_solved));
     }
 
     // Retrieve a new board for the user to solve
     newBoard() {
-      let response: Observable<Object> = this._http.getNewBoard("easy"); // TODO(jordanhuus): remove hard code
+      let response: Observable<Object> = this._http.getNewBoard(
+          "easy", this.auth.getUserInfo()); // TODO(jordanhuus): remove hard code
       response.subscribe(
         value => {
           this.board = new Board(
@@ -72,13 +75,14 @@ export class BoardComponent implements OnInit {
 
     // Display the original version after initially created
     resetBoard() {
-      this.board_displayed = JSON.parse(JSON.stringify(this.board.board_original));
+      this.board_displayed = JSON.parse(
+        JSON.stringify(this.board.board_original));
     }
 
     // Save this.board's progress
     saveBoard() {
       this.board.board = this.sanitizeBoardData(this.board_displayed);
-      let response = this._http.saveBoard(this.board);
+      let response = this._http.saveBoard(this.board, this.auth.getUserInfo());
       response.subscribe(
         value => {
           this.user_message = "Saved!";

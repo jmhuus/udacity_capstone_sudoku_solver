@@ -29,18 +29,19 @@ export class HttpService {
   }
 
   // Post request to solve the sudoku puzzle
-  getNewBoard(difficulty: string): Observable<Object> {
+  getNewBoard(difficulty: string, userInfo: Object): Observable<Object> {
     let httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
     let body = {
-      "difficulty": difficulty
+      "difficulty": difficulty,
+      "user_info": userInfo
     }
     return this.http.post(this.solve_url+"/board-new", JSON.stringify(body), httpOptions);
   }
 
   // Save the current boards progress
-  saveBoard(board: Board): Observable<Object> {
+  saveBoard(board: Board, userInfo: Object): Observable<Object> {
     console.log(board.format());
 
     let httpOptions = {
@@ -48,7 +49,8 @@ export class HttpService {
     };
     let body = {
       "board_id": board.id,
-      "board_json": board.board
+      "board_json": board.board,
+      "user_info":  userInfo
     }
     return this.http.put(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
   }

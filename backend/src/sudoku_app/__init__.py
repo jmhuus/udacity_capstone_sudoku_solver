@@ -46,8 +46,20 @@ def create_app():
     @app.route('/board-new', methods=["POST"])
     def get_new_board():
         data = json.loads(request.data)
-        board = SudokuBoard(data["difficulty"])
+
+        # Check if the user (auth_id) already exists
+        user = None
+        user_info = data["user_info"]
+        if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
+            user = User.query.filter(User.auth_id == user_info["id"]).first()
+        else:
+            user = User(user_info["name"], user_info["name"], user_info["id"])
+            user.add()
+
+        # Store the newly created board
+        board = SudokuBoard(data["difficulty"], user)
         board.add()
+
         return jsonify(board.format()), 200
 
 
@@ -64,11 +76,20 @@ def create_app():
     def save_board():
         # Retrieve board model object and save
         data = json.loads(request.data)
+
+        # Check if the user (auth_id) already exists
+        user_info = data["user_info"]
+        user = None
+        if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
+            user = User.query.filter(User.auth_id == user_info["id"]).first()
+        else:
+            user = User(user_info["name"], user_info["name"], user_info["id"])
+            user.add()
+
+        # Update the board
         board = SudokuBoard.query.get(data["board_id"])
         board.board_json = data["board_json"]
 
-        print("pp.pprint(board.board_json)")
-        pp.pprint(board.board_json)
         return jsonify(board.format()), 200
 
     return app

@@ -15,9 +15,9 @@
 </div>
 <div class="container">
   <button (click)="solveBoard()">Solve</button>
-  <button (click)="newBoard()">New Board</button>
-  <button (click)="resetBoard()">Reset Board</button>
-  <button (click)="saveBoard()">Save Board</button>
-  <button (click)="getBoard()">Get Board</button>
+  <button *ngIf="auth.payload" (click)="newBoard()">New Board</button>
+  <button *ngIf="auth.payload" (click)="resetBoard()">Reset Board</button>
+  <button *ngIf="auth.payload" (click)="saveBoard()">Save Board</button>
+  <button *ngIf="auth.payload" (click)="getBoard()">Get Board</button>
   <h3>{{ user_message }}</h3>
 </div>
