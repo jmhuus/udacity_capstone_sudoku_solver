@@ -16,6 +16,7 @@ export class BoardComponent implements OnInit {
     board: Board;
     user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
+    user_boards: Object[];
 
     constructor(private _http: HttpService, public auth: AuthService) {
       this.board_displayed = Board.getBlankBoard();
@@ -24,6 +25,11 @@ export class BoardComponent implements OnInit {
 
     ngOnInit() {
 
+      // If the user is logged in and user_boards is empty, attempt loading
+      // the user's boards.
+      if (this.auth.getUserInfo() != null && this.user_boards == null) {
+        this.displayUserBoards();
+      }
     }
 
     // Set shading
@@ -82,7 +88,7 @@ export class BoardComponent implements OnInit {
     // Save this.board's progress
     saveBoard() {
       this.board.board = this.sanitizeBoardData(this.board_displayed);
-      let response = this._http.saveBoard(this.board, this.auth.getUserInfo());
+      let response: Observable<Object> = this._http.saveBoard(this.board, this.auth.getUserInfo());
       response.subscribe(
         value => {
           this.user_message = "Saved!";
@@ -110,18 +116,37 @@ export class BoardComponent implements OnInit {
       return sanitizedBoardData
     }
 
-    // Get a specific board from the server
-    getBoard() {
-      let response = this._http.getBoard(9);
+    // // Get a specific board from the server
+    // getBoard(): void {
+    //   let response: Observable<Object> = this._http.getBoard(9);
+    //   response.subscribe(
+    //     value => {
+    //       console.log(value);
+    //
+    //       this.board = new Board(
+    //         value["board_id"],
+    //         value["board_json"],
+    //         value["board_json_solved"],
+    //         value["board_json"]);
+    //       this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
+    //     },
+    //     error => console.log("error: "+error),
+    //     () => console.log("complete")
+    //   );
+    // }
+
+    // Display all of the user's saved boards
+    displayUserBoards(): void {
+      let response: Observable<Object> = this._http.getUserBoards(this.auth.getUserInfo());
       response.subscribe(
         value => {
           console.log(value);
-
+          this.user_boards = value;
           this.board = new Board(
-            value["board_id"],
-            value["board_json"],
-            value["board_json_solved"],
-            value["board_json"]);
+            value[0]["board_id"],
+            value[0]["board_json"],
+            value[0]["board_json_solved"],
+            value[0]["board_json"]);
           this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
         },
         error => console.log("error: "+error),

@@ -18,6 +18,12 @@
   <button *ngIf="auth.payload" (click)="newBoard()">New Board</button>
   <button *ngIf="auth.payload" (click)="resetBoard()">Reset Board</button>
   <button *ngIf="auth.payload" (click)="saveBoard()">Save Board</button>
-  <button *ngIf="auth.payload" (click)="getBoard()">Get Board</button>
+  <!-- <button *ngIf="auth.payload" (click)="getBoard()">Get Board</button> -->
   <h3>{{ user_message }}</h3>
+</div>
+<div class="container" *ngIf="board_displayed">
+  <h3>Saved Boards</h3>
+  <ul *ngFor="let board of user_boards;">
+    <li>{{ board.board_json }}</li>
+  </ul>
 </div>

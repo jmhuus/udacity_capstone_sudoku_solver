@@ -71,6 +71,16 @@ def create_app():
         return jsonify(board.format()), 200
 
 
+    # Retrieve a board from the database
+    @app.route('/board-get-user', methods=["POST"])
+    def get_user_boards_from_database():
+        data = json.loads(request.data)
+        user_info = data["user_info"]
+        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+        boards_data = [board.format() for board in boards]
+        return jsonify(boards_data), 200
+
+
     # Save board progress
     @app.route('/board-save', methods=["PUT"])
     def save_board():
