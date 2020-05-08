@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 from solver.solver import Solver, generate_new_board
-from flask import jsonify
+import pprint as pp
+
 
 db = SQLAlchemy()
 
@@ -61,23 +62,26 @@ class SudokuBoard(db.Model):
     __tablename__ = "SudokuBoard"
 
     id = Column(Integer, primary_key=True)
-    board_json = Column(ARRAY(Integer), nullable=False)
-    solved_board = Column(ARRAY(Integer), nullable=False)
+    board_json = Column(String, nullable=False)
+    solved_board_json = Column(String, nullable=False)
     user_id = Column(Integer, db.ForeignKey("User.id"), nullable=False)
 
     def __init__(self, difficulty, user):
         self.difficulty = difficulty
         new_board = generate_new_board(self.difficulty)
         self.board_json = new_board["board"]
-        self.solved_board = new_board["solved_board"]
+        self.solved_board_json = new_board["solved_board"]
         self.user_id = user.id
 
     def format(self):
         return {
             "board_id": self.id,
-            "board_json": self.board_json,
-            "board_json_solved": self.solved_board
+            "board_json": json.loads(self.board_json),
+            "board_json_solved": json.loads(self.solved_board_json)
         }
+
+    def update(self):
+        db.session.commit()
 
     def add(self):
         db.session.add(self)
@@ -85,3 +89,13 @@ class SudokuBoard(db.Model):
 
     def __repr__(self):
         return f'<SudokuBoard {self.id} {self.user_id}>'
+
+    def __str__(self):
+        board_solved_str = pp.pformat(self.solved_board_json)
+        board_str = pp.pformat(self.board_json)
+        return \
+            f"<SudokuBoard {self.id} {self.user_id} \n \
+            board: \n \
+            "+board_str+" + \n \
+            solved board: \n \
+            "+board_solved_str

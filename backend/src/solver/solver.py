@@ -161,7 +161,8 @@ def generate_new_board(difficulty):
         difficulty: string 'easy', 'medium', or 'hard'.
 
     Returns:
-        Dictionary of the "solved_board" and "board".
+        Dictionary of the "solved_board" and "board". Each board representation
+        is in JSON format.
     """
     new_board_data = {
         "solved_board": None,
@@ -188,7 +189,7 @@ def generate_new_board(difficulty):
     # Solve the board
     solver = Solver(board, 9)
     board = solver.solve()
-    new_board_data["solved_board"] = deepcopy(board)
+    new_board_data["solved_board"] = jsonify_board(deepcopy(board))
 
     # Determine board density based on difficulty
     if difficulty == "hard":
@@ -213,5 +214,22 @@ def generate_new_board(difficulty):
                     snake_locations_removed.append(cell_to_remove)
                 snake_location += 1
 
-    new_board_data["board"] = board
+    new_board_data["board"] = jsonify_board(board)
     return new_board_data
+
+
+def jsonify_board(board_list):
+    """
+    Converts a python 2D list into a python dictionary that can easily be
+    converted to JSON.
+
+    Args:
+        board_list: 2 dimensional python list; represents sudoku board.
+
+    Returns:
+        JSON string representation of a Sudoku board.
+    """
+    board = {}
+    for i in range(len(board_list)):
+        board[str(i)] = board_list[i]
+    return json.dumps(board)

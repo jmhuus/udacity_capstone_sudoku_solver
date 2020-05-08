@@ -24,6 +24,6 @@
 <div class="container" *ngIf="board_displayed">
   <h3>Saved Boards</h3>
   <ul *ngFor="let board of user_boards;">
-    <li>{{ board.board_json }}</li>
+    <li>{{ board.board_json | json}}</li>
   </ul>
 </div>

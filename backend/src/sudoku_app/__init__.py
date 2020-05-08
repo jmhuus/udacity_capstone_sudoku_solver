@@ -5,7 +5,6 @@ from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
 from flask_migrate import Migrate
-
 import pprint as pp
 
 
@@ -19,7 +18,6 @@ def create_app():
 
     @app.route('/')
     def get_greeting():
-        print(SudokuBoard.query.first())
         return jsonify({
             "success": True,
             "message": "not implemented"
@@ -98,8 +96,8 @@ def create_app():
 
         # Update the board
         board = SudokuBoard.query.get(data["board_id"])
-        board.board_json = data["board_json"]
-
+        board.board_json = json.dumps(data["board_json"])
+        board.update()
         return jsonify(board.format()), 200
 
     return app

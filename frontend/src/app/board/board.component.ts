@@ -16,7 +16,7 @@ export class BoardComponent implements OnInit {
     board: Board;
     user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
-    user_boards: Object[];
+    user_boards: Object;
 
     constructor(private _http: HttpService, public auth: AuthService) {
       this.board_displayed = Board.getBlankBoard();
@@ -140,7 +140,10 @@ export class BoardComponent implements OnInit {
       let response: Observable<Object> = this._http.getUserBoards(this.auth.getUserInfo());
       response.subscribe(
         value => {
-          console.log(value);
+          // User has no saved boards
+          if (value == null || value == "") { return }
+
+          // Retrieve user's baord data
           this.user_boards = value;
           this.board = new Board(
             value[0]["board_id"],
