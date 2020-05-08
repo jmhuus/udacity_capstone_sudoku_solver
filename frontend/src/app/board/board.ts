@@ -24,17 +24,43 @@ export class Board {
   }
 
   // Returns a blank board Object
-  static getBlankBoard(): Object {
-    return {
-      0: [null,null,null,null,null,null,null,null,null],
-      1: [null,null,null,null,null,null,null,null,null],
-      2: [null,null,null,null,null,null,null,null,null],
-      3: [null,null,null,null,null,null,null,null,null],
-      4: [null,null,null,null,null,null,null,null,null],
-      5: [null,null,null,null,null,null,null,null,null],
-      6: [null,null,null,null,null,null,null,null,null],
-      7: [null,null,null,null,null,null,null,null,null],
-      8: [null,null,null,null,null,null,null,null,null],
-    }
+  static getBlankBoard(): Board {
+    let blankBoard: Board = new Board(
+      0,
+      {
+        0: [null,null,null,null,null,null,null,null,null],
+        1: [null,null,null,null,null,null,null,null,null],
+        2: [null,null,null,null,null,null,null,null,null],
+        3: [null,null,null,null,null,null,null,null,null],
+        4: [null,null,null,null,null,null,null,null,null],
+        5: [null,null,null,null,null,null,null,null,null],
+        6: [null,null,null,null,null,null,null,null,null],
+        7: [null,null,null,null,null,null,null,null,null],
+        8: [null,null,null,null,null,null,null,null,null],
+      },
+      {
+        0: [null,null,null,null,null,null,null,null,null],
+        1: [null,null,null,null,null,null,null,null,null],
+        2: [null,null,null,null,null,null,null,null,null],
+        3: [null,null,null,null,null,null,null,null,null],
+        4: [null,null,null,null,null,null,null,null,null],
+        5: [null,null,null,null,null,null,null,null,null],
+        6: [null,null,null,null,null,null,null,null,null],
+        7: [null,null,null,null,null,null,null,null,null],
+        8: [null,null,null,null,null,null,null,null,null],
+      },
+      {
+        0: [null,null,null,null,null,null,null,null,null],
+        1: [null,null,null,null,null,null,null,null,null],
+        2: [null,null,null,null,null,null,null,null,null],
+        3: [null,null,null,null,null,null,null,null,null],
+        4: [null,null,null,null,null,null,null,null,null],
+        5: [null,null,null,null,null,null,null,null,null],
+        6: [null,null,null,null,null,null,null,null,null],
+        7: [null,null,null,null,null,null,null,null,null],
+        8: [null,null,null,null,null,null,null,null,null],
+      }
+    );
+    return blankBoard;
   }
 }

@@ -1,15 +1,15 @@
 <div class="container">
   <table *ngIf="board_displayed">
     <tr *ngFor="let row of board_size; index as i;">
-        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" [(ngModel)]="board_displayed[i][0]"></td>
-        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" [(ngModel)]="board_displayed[i][1]"></td>
-        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" [(ngModel)]="board_displayed[i][2]"></td>
-        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" [(ngModel)]="board_displayed[i][3]"></td>
-        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" [(ngModel)]="board_displayed[i][4]"></td>
-        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" [(ngModel)]="board_displayed[i][5]"></td>
-        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" [(ngModel)]="board_displayed[i][6]"></td>
-        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" [(ngModel)]="board_displayed[i][7]"></td>
-        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" [(ngModel)]="board_displayed[i][8]"></td>
+        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" [(ngModel)]="board_displayed.board[i][0]"></td>
+        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" [(ngModel)]="board_displayed.board[i][1]"></td>
+        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" [(ngModel)]="board_displayed.board[i][2]"></td>
+        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" [(ngModel)]="board_displayed.board[i][3]"></td>
+        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" [(ngModel)]="board_displayed.board[i][4]"></td>
+        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" [(ngModel)]="board_displayed.board[i][5]"></td>
+        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" [(ngModel)]="board_displayed.board[i][6]"></td>
+        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" [(ngModel)]="board_displayed.board[i][7]"></td>
+        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" [(ngModel)]="board_displayed.board[i][8]"></td>
     </tr>
   </table>
 </div>
@@ -21,9 +21,23 @@
   <!-- <button *ngIf="auth.payload" (click)="getBoard()">Get Board</button> -->
   <h3>{{ user_message }}</h3>
 </div>
-<div class="container" *ngIf="board_displayed">
+<div class="container" *ngIf="user_boards">
   <h3>Saved Boards</h3>
-  <ul *ngFor="let board of user_boards;">
-    <li>{{ board.board_json | json}}</li>
+  <ul class="saved_user_board_li" *ngFor="let board_item of user_boards; index as i;">
+    <li (click)="getBoard(i)">
+      <table>
+        <tr *ngFor="let row of board_size; index as i;">
+            <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][0]" disabled></td>
+            <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][1]" disabled></td>
+            <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][2]" disabled></td>
+            <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][3]" disabled></td>
+            <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][4]" disabled></td>
+            <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][5]" disabled></td>
+            <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][6]" disabled></td>
+            <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][7]" disabled></td>
+            <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][8]" disabled></td>
+        </tr>
+      </table>
+    </li>
   </ul>
 </div>

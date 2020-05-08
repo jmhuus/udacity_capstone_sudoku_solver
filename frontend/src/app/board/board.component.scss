@@ -22,6 +22,18 @@ input {
   border: none;
 }
 
+.saved_user_board {
+  background: white;
+  width: 35px;
+  height: 25px;
+  text-align: center;
+  font-size: 0.75rem;
+  border: none;
+}
+
+.saved_user_board_li {
+  list-style-type: none;
+}
 
 .center {
   background: rgb(200, 200, 200);

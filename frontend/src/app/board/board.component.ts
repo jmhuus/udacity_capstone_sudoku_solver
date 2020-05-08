@@ -12,18 +12,18 @@ import { AuthService } from '../services/auth.service';
 })
 export class BoardComponent implements OnInit {
 
-    board_displayed: Object;
+    board_displayed: Board;
     board: Board;
     user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
-    user_boards: Object;
+    user_boards: Board[];
 
-    constructor(private _http: HttpService, public auth: AuthService) {
-      this.board_displayed = Board.getBlankBoard();
-      this.user_message = "";
-    }
+    constructor(private _http: HttpService, public auth: AuthService) { }
 
     ngOnInit() {
+      // Initialize empty board
+      this.board_displayed = Board.getBlankBoard();
+      this.user_message = "";
 
       // If the user is logged in and user_boards is empty, attempt loading
       // the user's boards.
@@ -45,7 +45,6 @@ export class BoardComponent implements OnInit {
     // Solve the sudoku puzzle
     solveRandomBoard() {
       this.user_message = "not implemented";
-
       // let response: Observable<Object> = this._http.solveBoard(this.original_board);
       // response.subscribe(
       //   value => {
@@ -116,24 +115,31 @@ export class BoardComponent implements OnInit {
       return sanitizedBoardData
     }
 
-    // // Get a specific board from the server
-    // getBoard(): void {
-    //   let response: Observable<Object> = this._http.getBoard(9);
-    //   response.subscribe(
-    //     value => {
-    //       console.log(value);
-    //
-    //       this.board = new Board(
-    //         value["board_id"],
-    //         value["board_json"],
-    //         value["board_json_solved"],
-    //         value["board_json"]);
-    //       this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
-    //     },
-    //     error => console.log("error: "+error),
-    //     () => console.log("complete")
-    //   );
-    // }
+    // Get a specific board from the server
+    getBoard(i: number): void {
+      this.board = new Board(
+        this.user_boards[i].id,
+        this.user_boards[i].board,
+        this.user_boards[i].board_solved,
+        this.user_boards[i].board);
+      this.board_displayed = JSON.parse(JSON.stringify(this.board));
+
+      // let response: Observable<Object> = this._http.getBoard(9);
+      // response.subscribe(
+      //   value => {
+      //     console.log(value);
+      //
+      //     this.board = new Board(
+      //       value["board_id"],
+      //       value["board_json"],
+      //       value["board_json_solved"],
+      //       value["board_json"]);
+      //     this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
+      //   },
+      //   error => console.log("error: "+error),
+      //   () => console.log("complete")
+      // );
+    }
 
     // Display all of the user's saved boards
     displayUserBoards(): void {
@@ -144,13 +150,24 @@ export class BoardComponent implements OnInit {
           if (value == null || value == "") { return }
 
           // Retrieve user's baord data
-          this.user_boards = value;
           this.board = new Board(
             value[0]["board_id"],
             value[0]["board_json"],
             value[0]["board_json_solved"],
             value[0]["board_json"]);
-          this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
+          this.board_displayed = JSON.parse(JSON.stringify(this.board));
+
+          // Display list of user boards
+          this.user_boards = [];
+          for (let i = 0; i < Object.keys(value).length; i++) {
+            const element = value[i];
+            this.user_boards.push(new Board(
+              element["board_id"],
+              element["board_json"],
+              element["board_json_solved"],
+              element["board_json"]
+            ));
+          }
         },
         error => console.log("error: "+error),
         () => console.log("complete")
