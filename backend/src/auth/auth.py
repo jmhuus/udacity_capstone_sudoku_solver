@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'jordan-flask-authentication-practice.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'sudoku_solver'
+API_AUDIENCE = 'sudoku-api'
 
 
 class AuthError(Exception):
@@ -181,11 +181,8 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            print("token = get_token_auth_header()")
             token = get_token_auth_header()
-            print("payload = verify_decode_jwt(token)")
             payload = verify_decode_jwt(token)
-            print("check_permissions(permission, payload)")
             check_permissions(permission, payload)
             return f(*args, **kwargs)
 

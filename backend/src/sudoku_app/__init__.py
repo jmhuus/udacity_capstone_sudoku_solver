@@ -5,6 +5,7 @@ from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
 from flask_migrate import Migrate
+from auth.auth import AuthError, requires_auth
 import pprint as pp
 
 
@@ -42,6 +43,7 @@ def create_app():
 
     # Get a new and unique board
     @app.route('/board-new', methods=["POST"])
+    @requires_auth(permission="add:sudoku")
     def get_new_board():
         data = json.loads(request.data)
 
@@ -63,6 +65,7 @@ def create_app():
 
     # Retrieve a board from the database
     @app.route('/board-get', methods=["POST"])
+    @requires_auth(permission="get:sudoku")
     def get_board_from_database():
         data = json.loads(request.data)
         board = SudokuBoard.query.get(data["board_id"])
@@ -71,6 +74,7 @@ def create_app():
 
     # Retrieve a board from the database
     @app.route('/board-get-user', methods=["POST"])
+    @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database():
         data = json.loads(request.data)
         user_info = data["user_info"]
@@ -81,6 +85,7 @@ def create_app():
 
     # Save board progress
     @app.route('/board-save', methods=["PUT"])
+    @requires_auth(permission="save:sudoku")
     def save_board():
         # Retrieve board model object and save
         data = json.loads(request.data)
@@ -106,10 +111,11 @@ def create_app():
         return jsonify(boards_data), 200
 
     @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
+    @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
         # TODO(jordanhuus): migrate this functionality to auth.py and requires_auth decorator
         token = request.headers.get("Authorization", None)
-        
+
         # Update the board
         board = SudokuBoard.query.get(board_id)
         board.delete()

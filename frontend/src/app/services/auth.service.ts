@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   getToken(): string {
-    return this.token;
+    return "bearer " + this.token;
   }
 
   logout(): void {

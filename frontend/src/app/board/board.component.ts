@@ -55,7 +55,7 @@ export class BoardComponent implements OnInit {
     newBoard() {
       // TODO(jordanhuus): remove hard code
       let response: Observable<Object> = this._http.getNewBoard(
-          "easy", this.auth.getUserInfo());
+          "easy", this.auth.getUserInfo(), this.auth.getToken());
       response.subscribe(
         value => {
           this.board = new Board(
@@ -86,7 +86,7 @@ export class BoardComponent implements OnInit {
         this.user_message = "Problem with login. Please log out and back in.";
         return;
       }
-      let response: Observable<Object> = this._http.saveBoard(this.board, userInfo);
+      let response: Observable<Object> = this._http.saveBoard(this.board, userInfo, this.auth.getToken());
       response.subscribe(
         value => {
           this.user_message = "Saved!";
@@ -134,7 +134,7 @@ export class BoardComponent implements OnInit {
 
     // Display all of the user's saved boards
     displayUserBoards(): void {
-      let response: Observable<Object> = this._http.getUserBoards(this.auth.getUserInfo());
+      let response: Observable<Object> = this._http.getUserBoards(this.auth.getUserInfo(), this.auth.getToken());
       response.subscribe(
         value => {
           // User has no saved boards

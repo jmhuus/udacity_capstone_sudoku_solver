@@ -29,9 +29,12 @@ export class HttpService {
   }
 
   // Post request to solve the sudoku puzzle
-  getNewBoard(difficulty: string, userInfo: Object): Observable<Object> {
+  getNewBoard(difficulty: string, userInfo: Object, token: string): Observable<Object> {
     let httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
     };
     let body = {
       "difficulty": difficulty,
@@ -41,10 +44,13 @@ export class HttpService {
   }
 
   // Save the current boards progress
-  saveBoard(board: Board, userInfo: Object): Observable<Object> {
+  saveBoard(board: Board, userInfo: Object, token: string): Observable<Object> {
 
     let httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
     };
     let body = {
       "board_id": board.id,
@@ -65,9 +71,12 @@ export class HttpService {
   //   return this.http.post(this.solve_url+"/board-get", JSON.stringify(body), httpOptions);
   // }
 
-  getUserBoards(userInfo: Object): Observable<Object> {
+  getUserBoards(userInfo: Object, token: string): Observable<Object> {
     let httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
     };
     let body = {
       "user_info": userInfo
@@ -76,7 +85,7 @@ export class HttpService {
   }
 
 
-  deleteBoard(board: Board, token: string): void {
+  deleteBoard(board: Board, token: string): Observable<Object> {
     let httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
