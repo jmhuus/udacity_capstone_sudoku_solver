@@ -42,7 +42,6 @@ export class HttpService {
 
   // Save the current boards progress
   saveBoard(board: Board, userInfo: Object): Observable<Object> {
-    console.log(board.format());
 
     let httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })

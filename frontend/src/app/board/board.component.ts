@@ -11,8 +11,6 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-
-    board_displayed: Board;
     board: Board;
     user_message: string;
     readonly board_size = [1,2,3,4,5,6,7,8,9];
@@ -22,7 +20,7 @@ export class BoardComponent implements OnInit {
 
     ngOnInit() {
       // Initialize empty board
-      this.board_displayed = Board.getBlankBoard();
+      this.board = Board.getBlankBoard();
       this.user_message = "";
 
       // If the user is logged in and user_boards is empty, attempt loading
@@ -45,25 +43,19 @@ export class BoardComponent implements OnInit {
     // Solve the sudoku puzzle
     solveRandomBoard() {
       this.user_message = "not implemented";
-      // let response: Observable<Object> = this._http.solveBoard(this.original_board);
-      // response.subscribe(
-      //   value => {
-      //     this.board_displayed = this.board.board;
-      //   },
-      //   error => console.log("error: "+error),
-      //   () => console.log("complete")
-      // );
     }
 
     solveBoard() {
-      this.board_displayed = JSON.parse(
-        JSON.stringify(this.board.board_solved));
+      // this.board.board = JSON.parse(JSON.stringify(this.board.board_solved));
+      console.log(this.board);
+
     }
 
     // Retrieve a new board for the user to solve
     newBoard() {
+      // TODO(jordanhuus): remove hard code
       let response: Observable<Object> = this._http.getNewBoard(
-          "easy", this.auth.getUserInfo()); // TODO(jordanhuus): remove hard code
+          "easy", this.auth.getUserInfo());
       response.subscribe(
         value => {
           this.board = new Board(
@@ -71,7 +63,9 @@ export class BoardComponent implements OnInit {
             value["board_json"],
             value["board_json_solved"],
             value["board_json"]);
-          this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
+
+          // Display all user boards
+          this.displayUserBoards();
         },
         error => console.log("error: "+error),
         () => console.log("complete")
@@ -80,17 +74,35 @@ export class BoardComponent implements OnInit {
 
     // Display the original version after initially created
     resetBoard() {
-      this.board_displayed = JSON.parse(
+      this.board.board = JSON.parse(
         JSON.stringify(this.board.board_original));
     }
 
     // Save this.board's progress
     saveBoard() {
-      this.board.board = this.sanitizeBoardData(this.board_displayed);
-      let response: Observable<Object> = this._http.saveBoard(this.board, this.auth.getUserInfo());
+      this.sanitizeBoardData();
+      let userInfo = this.auth.getUserInfo();
+      if (userInfo == null) {
+        this.user_message = "Problem with login. Please log out and back in.";
+        return;
+      }
+      let response: Observable<Object> = this._http.saveBoard(this.board, userInfo);
       response.subscribe(
         value => {
           this.user_message = "Saved!";
+
+          // Display list of user boards
+          this.user_boards = [];
+          for (let i = 0; i < Object.keys(value).length; i++) {
+            const element = value[i];
+            let newBoard: Board = new Board(
+              element["board_id"],
+              element["board_json"],
+              element["board_json_solved"],
+              element["board_json"]
+            );
+            this.user_boards.push(newBoard);
+          }
         },
         error => console.log("error: "+error),
         () => console.log("complete")
@@ -98,47 +110,26 @@ export class BoardComponent implements OnInit {
     }
 
     // Sanitize board data; ensure that all input is the same format
-    sanitizeBoardData(boardData: Object) {
-      let sanitizedBoardData: Object = Board.getBlankBoard();
-
-      for (let row = 0; row < Object.keys(boardData).length; row++) {
-        for (let column = 0; column < boardData[row].length; column++) {
-          const element = boardData[row][column];
+    sanitizeBoardData(): void {
+      for (let row = 0; row < Object.keys(this.board.board).length; row++) {
+        for (let column = 0; column < this.board.board[row].length; column++) {
+          const element = this.board.board[row][column];
           if(typeof element == "string"){
-            sanitizedBoardData[row][column] = parseInt(element);
+            this.board.board[row][column] = parseInt(element);
           } else {
-            sanitizedBoardData[row][column] = element;
+            this.board.board[row][column] = element;
           }
         }
       }
-
-      return sanitizedBoardData
     }
 
     // Get a specific board from the server
     getBoard(i: number): void {
-      this.board = new Board(
+      this.board = JSON.parse(JSON.stringify(new Board(
         this.user_boards[i].id,
         this.user_boards[i].board,
         this.user_boards[i].board_solved,
-        this.user_boards[i].board);
-      this.board_displayed = JSON.parse(JSON.stringify(this.board));
-
-      // let response: Observable<Object> = this._http.getBoard(9);
-      // response.subscribe(
-      //   value => {
-      //     console.log(value);
-      //
-      //     this.board = new Board(
-      //       value["board_id"],
-      //       value["board_json"],
-      //       value["board_json_solved"],
-      //       value["board_json"]);
-      //     this.board_displayed = JSON.parse(JSON.stringify(this.board.board));
-      //   },
-      //   error => console.log("error: "+error),
-      //   () => console.log("complete")
-      // );
+        this.user_boards[i].board)));
     }
 
     // Display all of the user's saved boards
@@ -150,23 +141,23 @@ export class BoardComponent implements OnInit {
           if (value == null || value == "") { return }
 
           // Retrieve user's baord data
-          this.board = new Board(
+          this.board = JSON.parse(JSON.stringify(new Board(
             value[0]["board_id"],
             value[0]["board_json"],
             value[0]["board_json_solved"],
-            value[0]["board_json"]);
-          this.board_displayed = JSON.parse(JSON.stringify(this.board));
+            value[0]["board_json"])));
 
           // Display list of user boards
           this.user_boards = [];
           for (let i = 0; i < Object.keys(value).length; i++) {
             const element = value[i];
-            this.user_boards.push(new Board(
+            let newBoard: Board = new Board(
               element["board_id"],
               element["board_json"],
               element["board_json_solved"],
               element["board_json"]
-            ));
+            );
+            this.user_boards.push(newBoard);
           }
         },
         error => console.log("error: "+error),

@@ -69,6 +69,8 @@ export class AuthService {
   getUserInfo(): Object {
     if (this.payload != null) {
       return this.payload["http://www.jordanhuus.com/user_info"];
+    } else {
+      return null;
     }
   }
 }

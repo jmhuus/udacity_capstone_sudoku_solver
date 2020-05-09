@@ -98,6 +98,11 @@ def create_app():
         board = SudokuBoard.query.get(data["board_id"])
         board.board_json = json.dumps(data["board_json"])
         board.update()
-        return jsonify(board.format()), 200
+
+        # Return all boards
+        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+        boards_data = [board.format() for board in boards]
+
+        return jsonify(boards_data), 200
 
     return app
