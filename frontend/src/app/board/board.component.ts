@@ -164,4 +164,31 @@ export class BoardComponent implements OnInit {
         () => console.log("complete")
       );
     }
+
+    deleteBoard(i: number): void {
+
+      // DELETE request
+      let response: Observable<Object> = this._http.deleteBoard(this.board, this.auth.getToken());
+      response.subscribe(
+        value => {
+          this.user_message = "Saved!";
+          console.log("response from delete request");
+          console.log(value);
+          // // Display list of user boards
+          // this.user_boards = [];
+          // for (let i = 0; i < Object.keys(value).length; i++) {
+          //   const element = value[i];
+          //   let newBoard: Board = new Board(
+          //     element["board_id"],
+          //     element["board_json"],
+          //     element["board_json_solved"],
+          //     element["board_json"]
+          //   );
+          //   this.user_boards.push(newBoard);
+          // }
+        },
+        error => console.log("error: "+error),
+        () => console.log("complete")
+      );
+    }
 }

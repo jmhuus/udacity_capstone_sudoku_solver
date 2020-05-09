@@ -105,4 +105,19 @@ def create_app():
 
         return jsonify(boards_data), 200
 
+    @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
+    def delete_board(board_id):
+        # TODO(jordanhuus): migrate this functionality to auth.py and requires_auth decorator
+        token = request.headers.get("Authorization", None)
+        
+        # Update the board
+        board = SudokuBoard.query.get(board_id)
+        board.delete()
+
+        # Return all boards
+        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+        boards_data = [board.format() for board in boards]
+
+        return jsonify(boards_data), 200
+
     return app

@@ -74,4 +74,15 @@ export class HttpService {
     }
     return this.http.post(this.solve_url+"/board-get-user", JSON.stringify(body), httpOptions);
   }
+
+
+  deleteBoard(board: Board, token: string): void {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
+    };
+    return this.http.delete(this.solve_url+"/board-delete/"+board.id, httpOptions);
+  }
 }

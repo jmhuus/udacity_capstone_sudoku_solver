@@ -38,6 +38,7 @@
             <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" class="saved_user_board" [(ngModel)]="board_item.board[i][8]" disabled></td>
         </tr>
       </table>
+      <button (click)="deleteBoard(i)">Delete Board</button>
     </li>
   </ul>
 </div>
