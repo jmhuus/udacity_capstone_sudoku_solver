@@ -60,17 +60,6 @@ export class HttpService {
     return this.http.put(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
   }
 
-  // // Get an existing board's data
-  // getBoard(board_id: number): Observable<Object> {
-  //   let httpOptions = {
-  //     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  //   };
-  //   let body = {
-  //     "board_id": board_id
-  //   }
-  //   return this.http.post(this.solve_url+"/board-get", JSON.stringify(body), httpOptions);
-  // }
-
   getUserBoards(userInfo: Object, token: string): Observable<Object> {
     let httpOptions = {
       headers: new HttpHeaders({
@@ -93,5 +82,15 @@ export class HttpService {
       })
     };
     return this.http.delete(this.solve_url+"/board-delete/"+board.id, httpOptions);
+  }
+
+  getBoardOfTheDay(token: string): Observable<Object> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
+    };
+    return this.http.get(this.solve_url+"/board-of-the-day", httpOptions);
   }
 }

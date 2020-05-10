@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BoardOfTheDayComponent } from './board-of-the-day/board-of-the-day.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BoardComponent
+    BoardComponent,
+    BoardOfTheDayComponent
   ],
   imports: [
     BrowserModule,

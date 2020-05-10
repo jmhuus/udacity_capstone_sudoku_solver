@@ -193,14 +193,15 @@ def generate_new_board(difficulty):
 
     # Determine board density based on difficulty
     if difficulty == "hard":
-        numbers_left = 30
+        numbers_left = 35
     elif difficulty == "medium":
-        numbers_left = 55
+        numbers_left = 45
     else: # easy
-        numbers_left = 70
+        numbers_left = 60
+    numbers_left = 81 - numbers_left
 
     # Remove numbers from the board
-    for _ in range(numbers_left):
+    for i in range(numbers_left):
         # Remove snake-based location starting from the top left
         snake_location = 0
         snake_locations_removed = []

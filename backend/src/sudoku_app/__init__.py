@@ -110,6 +110,7 @@ def create_app():
 
         return jsonify(boards_data), 200
 
+
     @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
     @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
@@ -125,5 +126,23 @@ def create_app():
         boards_data = [board.format() for board in boards]
 
         return jsonify(boards_data), 200
+
+
+    @app.route('/board-of-the-day', methods=["GET"])
+    def get_board_of_the_day():
+
+        # Retrieve/create fake board-of-the-day user. A user record is required
+        # for an associated sudoku board
+        user = User.query.filter(User.first_name == "board-of-the-day").first()
+        if user is None:
+            user = User("board-of-the-day", "board-of-the-day", "no-auth-id")
+            user.add()
+
+        # Retrieve/create a sudoku board of the day
+        board_of_the_day = SudokuBoard.query.filter(SudokuBoard.user_id == user.id).first()
+        if board_of_the_day is None:
+            board_of_the_day = SudokuBoard("easy", user)
+            board_of_the_day.add()
+        return jsonify(board_of_the_day.format()), 200
 
     return app

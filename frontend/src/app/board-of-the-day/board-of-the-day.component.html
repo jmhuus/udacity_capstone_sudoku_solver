@@ -1,0 +1,29 @@
+<h1>Board of the Day</h1>
+<p>The board of the day is a speed challenge on an easy sudoku puzzle that
+  cannot be saved. The goal is to solve it as fast as possible. Every day, the
+  board hand-picked by the administrator of this site.
+</p>
+<br>
+<br>
+<div class="container">
+  <h3>{{ user_message }}</h3>
+</div>
+<div class="container">
+  <table *ngIf="board_of_the_day" (keyup)="changed($event)">
+    <tr *ngFor="let row of board_size; index as i;">
+        <td><input id="{{ i }}-0" [ngClass]="setClass(0, i)" [(ngModel)]="board_of_the_day.board[i][0]"></td>
+        <td><input id="{{ i }}-1" [ngClass]="setClass(1, i)" [(ngModel)]="board_of_the_day.board[i][1]"></td>
+        <td><input id="{{ i }}-2" [ngClass]="setClass(2, i)" [(ngModel)]="board_of_the_day.board[i][2]"></td>
+        <td><input id="{{ i }}-3" [ngClass]="setClass(3, i)" [(ngModel)]="board_of_the_day.board[i][3]"></td>
+        <td><input id="{{ i }}-4" [ngClass]="setClass(4, i)" [(ngModel)]="board_of_the_day.board[i][4]"></td>
+        <td><input id="{{ i }}-5" [ngClass]="setClass(5, i)" [(ngModel)]="board_of_the_day.board[i][5]"></td>
+        <td><input id="{{ i }}-6" [ngClass]="setClass(6, i)" [(ngModel)]="board_of_the_day.board[i][6]"></td>
+        <td><input id="{{ i }}-7" [ngClass]="setClass(7, i)" [(ngModel)]="board_of_the_day.board[i][7]"></td>
+        <td><input id="{{ i }}-8" [ngClass]="setClass(8, i)" [(ngModel)]="board_of_the_day.board[i][8]"></td>
+    </tr>
+  </table>
+</div>
+<div class="container">
+  <button (click)="resetBoard()">Reset Board</button>
+  <button *ngIf="isAdmin" (click)="saveBoard()">Save Board</button>
+</div>
