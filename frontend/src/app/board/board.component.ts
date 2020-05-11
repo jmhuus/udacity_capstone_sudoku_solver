@@ -65,7 +65,7 @@ export class BoardComponent implements OnInit {
             value["board_json"]);
 
           // Display all user boards
-          this.displayUserBoards();
+          this.displayUserBoards(value["board_id"]);
         },
         error => console.log("error: "+error),
         () => console.log("complete")
@@ -133,19 +133,29 @@ export class BoardComponent implements OnInit {
     }
 
     // Display all of the user's saved boards
-    displayUserBoards(): void {
+    displayUserBoards(main_board_id: number = null): void {
       let response: Observable<Object> = this._http.getUserBoards(this.auth.getUserInfo(), this.auth.getToken());
       response.subscribe(
         value => {
           // User has no saved boards
           if (value == null || value == "") { return }
 
+          // Display the main board based on ID - or - random (unspecified) board
+          let chosen_board_index: number = 0;
+          if (main_board_id != null) {
+            for (let i=0; i < Object.keys(value).length; i++) {
+              if (value[i].board_id == main_board_id) {
+                chosen_board_index = i;
+              }
+            }
+          }
+
           // Retrieve user's baord data
           this.board = JSON.parse(JSON.stringify(new Board(
-            value[0]["board_id"],
-            value[0]["board_json"],
-            value[0]["board_json_solved"],
-            value[0]["board_json"])));
+            value[chosen_board_index]["board_id"],
+            value[chosen_board_index]["board_json"],
+            value[chosen_board_index]["board_json_solved"],
+            value[chosen_board_index]["board_json"])));
 
           // Display list of user boards
           this.user_boards = [];
@@ -171,21 +181,20 @@ export class BoardComponent implements OnInit {
       let response: Observable<Object> = this._http.deleteBoard(this.board, this.auth.getToken());
       response.subscribe(
         value => {
-          this.user_message = "Saved!";
-          console.log("response from delete request");
-          console.log(value);
-          // // Display list of user boards
-          // this.user_boards = [];
-          // for (let i = 0; i < Object.keys(value).length; i++) {
-          //   const element = value[i];
-          //   let newBoard: Board = new Board(
-          //     element["board_id"],
-          //     element["board_json"],
-          //     element["board_json_solved"],
-          //     element["board_json"]
-          //   );
-          //   this.user_boards.push(newBoard);
-          // }
+          this.user_message = "";
+
+          // Display list of user boards
+          this.user_boards = [];
+          for (let i = 0; i < Object.keys(value).length; i++) {
+            const element = value[i];
+            let newBoard: Board = new Board(
+              element["board_id"],
+              element["board_json"],
+              element["board_json_solved"],
+              element["board_json"]
+            );
+            this.user_boards.push(newBoard);
+          }
         },
         error => console.log("error: "+error),
         () => console.log("complete")

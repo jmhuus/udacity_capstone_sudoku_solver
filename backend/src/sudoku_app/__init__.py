@@ -5,7 +5,8 @@ from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
 from flask_migrate import Migrate
-from auth.auth import AuthError, requires_auth
+from auth.auth import AuthError, requires_auth, verify_decode_jwt, \
+    get_token_auth_header
 import pprint as pp
 
 
@@ -114,15 +115,14 @@ def create_app():
     @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
     @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
-        # TODO(jordanhuus): migrate this functionality to auth.py and requires_auth decorator
-        token = request.headers.get("Authorization", None)
+        payload = verify_decode_jwt(get_token_auth_header())
 
         # Update the board
         board = SudokuBoard.query.get(board_id)
         board.delete()
 
         # Return all boards
-        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+        boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
         boards_data = [board.format() for board in boards]
 
         return jsonify(boards_data), 200
