@@ -17,8 +17,9 @@ export class BoardOfTheDayComponent implements OnInit {
   isAdmin: boolean;
 
   constructor(private _http: HttpService, public auth: AuthService) {
-    // if (this.auth.getPayload())
-    this.isAdmin = false;
+    let payload = this.auth.getPayload();
+    if (payload == null) { return; }
+    this.isAdmin = payload["permissions"].includes("add:sudoku-of-the-day");
   }
 
   ngOnInit(): void {
@@ -71,7 +72,20 @@ export class BoardOfTheDayComponent implements OnInit {
 
   // Administrator's ability to change the board of the day
   saveBoard(): void {
-    console.log("not implemented");
+    this.sanitizeBoardData();
+    let userInfo = this.auth.getUserInfo();
+    if (userInfo == null) {
+      this.user_message = "Problem with login. Please log out and back in.";
+      return;
+    }
+    let response: Observable<Object> = this._http.saveBoard(this.board_of_the_day, userInfo, this.auth.getToken());
+    response.subscribe(
+      value => {
+        this.user_message = "Saved!";
+      },
+      error => console.log("error: "+error),
+      () => console.log("complete")
+    );
   }
 
   // Sanitize board data; ensure that all input is the same format
