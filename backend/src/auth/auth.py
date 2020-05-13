@@ -120,14 +120,18 @@ def verify_decode_jwt(token):
         KeyError: Raises an AuthError if the token is not valid.
     """
 
-    # Retrieve token header
-    unverified_header = jwt.get_unverified_header(token)
-    rsa_key = {}
-    if 'kid' not in unverified_header:
+    try:
+        # Retrieve token header
+        unverified_header = jwt.get_unverified_header(token)
+        rsa_key = {}
+        if 'kid' not in unverified_header:
+            raise Error
+    except Exception as e:
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization malformed.'
         }, 401)
+
 
     # Retrieve public key (RSA key)
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json') # https://jordan-flask-authentication-practice.auth0.com/.well-known/jwks.json

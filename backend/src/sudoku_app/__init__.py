@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for
 from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
@@ -20,9 +20,32 @@ def create_app():
 
     @app.route('/')
     def get_greeting():
+        links = []
+        def has_no_empty_params(rule):
+            defaults = rule.defaults if rule.defaults is not None else ()
+            arguments = rule.arguments if rule.arguments is not None else ()
+            return len(defaults) >= len(arguments)
+        for rule in app.url_map.iter_rules():
+            # Filter out rules we can't navigate to in a browser
+            # and rules that require parameters
+            if "GET" in rule.methods and has_no_empty_params(rule):
+                url = url_for(rule.endpoint, **(rule.defaults or {}))
+                links.append((url, rule.endpoint))
+            if "POST" in rule.methods and has_no_empty_params(rule):
+                url = url_for(rule.endpoint, **(rule.defaults or {}))
+                links.append((url, rule.endpoint))
+            if "DELETE" in rule.methods and has_no_empty_params(rule):
+                url = url_for(rule.endpoint, **(rule.defaults or {}))
+                links.append((url, rule.endpoint))
+            if "PUT" in rule.methods and has_no_empty_params(rule):
+                url = url_for(rule.endpoint, **(rule.defaults or {}))
+                links.append((url, rule.endpoint))
+
         return jsonify({
             "success": True,
-            "message": "not implemented"
+            "message": "Welcome to the Sudoku solver API. Start solving sudoku \
+boards by calling '/solve-board'!",
+            "endpionts": [link[0] for link in links]
         }), 200
 
 
@@ -32,10 +55,14 @@ def create_app():
     """
     @app.route('/solve-board', methods=["POST"])
     def solve_board():
-        # Retrieve request data
-        data = json.loads(request.data)
-        solver = Solver(data["board_json"], 9)
-        solved_board = solver.solve()
+        try:
+            # Retrieve request data
+            data = json.loads(request.data)
+            solver = Solver(data["board_json"], 9)
+            solved_board = solver.solve()
+        except Exception:
+            abort(500)
+
         return jsonify({
             "success": True,
             "board_json_solved": solved_board
@@ -46,20 +73,24 @@ def create_app():
     @app.route('/board-new', methods=["POST"])
     @requires_auth(permission="add:sudoku")
     def get_new_board():
-        data = json.loads(request.data)
+        try:
+            data = json.loads(request.data)
 
-        # Check if the user (auth_id) already exists
-        user = None
-        user_info = data["user_info"]
-        if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
-            user = User.query.filter(User.auth_id == user_info["id"]).first()
-        else:
-            user = User(user_info["name"], user_info["name"], user_info["id"])
-            user.add()
+            # Check if the user (auth_id) already exists
+            user = None
+            user_info = data["user_info"]
+            if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
+                user = User.query.filter(User.auth_id == user_info["id"]).first()
+            else:
+                user = User(user_info["name"], user_info["name"], user_info["id"])
+                user.add()
 
-        # Store the newly created board
-        board = SudokuBoard(data["difficulty"], user)
-        board.add()
+            # Store the newly created board
+            board = SudokuBoard(data["difficulty"], user)
+            board.add()
+
+        except Exception:
+            abort(500)
 
         return jsonify(board.format()), 200
 
@@ -68,8 +99,12 @@ def create_app():
     @app.route('/board-get', methods=["POST"])
     @requires_auth(permission="get:sudoku")
     def get_board_from_database():
-        data = json.loads(request.data)
-        board = SudokuBoard.query.get(data["board_id"])
+        try:
+            data = json.loads(request.data)
+            board = SudokuBoard.query.get(data["board_id"])
+        except Exception:
+            abort(500)
+
         return jsonify(board.format()), 200
 
 
@@ -77,10 +112,15 @@ def create_app():
     @app.route('/board-get-user', methods=["POST"])
     @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database():
-        data = json.loads(request.data)
-        user_info = data["user_info"]
-        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
-        boards_data = [board.format() for board in boards]
+        try:
+            data = json.loads(request.data)
+            user_info = data["user_info"]
+            boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+            boards_data = [board.format() for board in boards]
+
+        except Exception:
+            abort(500)
+
         return jsonify(boards_data), 200
 
 
@@ -88,26 +128,30 @@ def create_app():
     @app.route('/board-save', methods=["PUT"])
     @requires_auth(permission="save:sudoku")
     def save_board():
-        # Retrieve board model object and save
-        data = json.loads(request.data)
+        try:
+            # Retrieve board model object and save
+            data = json.loads(request.data)
 
-        # Check if the user (auth_id) already exists
-        user_info = data["user_info"]
-        user = None
-        if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
-            user = User.query.filter(User.auth_id == user_info["id"]).first()
-        else:
-            user = User(user_info["name"], user_info["name"], user_info["id"])
-            user.add()
+            # Check if the user (auth_id) already exists
+            user_info = data["user_info"]
+            user = None
+            if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
+                user = User.query.filter(User.auth_id == user_info["id"]).first()
+            else:
+                user = User(user_info["name"], user_info["name"], user_info["id"])
+                user.add()
 
-        # Update the board
-        board = SudokuBoard.query.get(data["board_id"])
-        board.board_json = json.dumps(data["board_json"])
-        board.update()
+            # Update the board
+            board = SudokuBoard.query.get(data["board_id"])
+            board.board_json = json.dumps(data["board_json"])
+            board.update()
 
-        # Return all boards
-        boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
-        boards_data = [board.format() for board in boards]
+            # Return all boards
+            boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+            boards_data = [board.format() for board in boards]
+
+        except Exception:
+            abort(500)
 
         return jsonify(boards_data), 200
 
@@ -115,34 +159,95 @@ def create_app():
     @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
     @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
-        payload = verify_decode_jwt(get_token_auth_header())
+        try:
+            payload = verify_decode_jwt(get_token_auth_header())
 
-        # Update the board
-        board = SudokuBoard.query.get(board_id)
-        board.delete()
+            # Update the board
+            board = SudokuBoard.query.get(board_id)
+            board.delete()
 
-        # Return all boards
-        boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
-        boards_data = [board.format() for board in boards]
+            # Return all boards
+            boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
+            boards_data = [board.format() for board in boards]
+        except Exception:
+            abort(500)
 
         return jsonify(boards_data), 200
 
 
     @app.route('/board-of-the-day', methods=["GET"])
     def get_board_of_the_day():
+        try:
+            # Retrieve/create fake board-of-the-day user. A user record is required
+            # for an associated sudoku board
+            user = User.query.filter(User.first_name == "board-of-the-day").first()
+            if user is None:
+                user = User("board-of-the-day", "board-of-the-day", "no-auth-id")
+                user.add()
 
-        # Retrieve/create fake board-of-the-day user. A user record is required
-        # for an associated sudoku board
-        user = User.query.filter(User.first_name == "board-of-the-day").first()
-        if user is None:
-            user = User("board-of-the-day", "board-of-the-day", "no-auth-id")
-            user.add()
+            # Retrieve/create a sudoku board of the day
+            board_of_the_day = SudokuBoard.query.filter(SudokuBoard.user_id == user.id).first()
+            if board_of_the_day is None:
+                board_of_the_day = SudokuBoard("easy", user)
+                board_of_the_day.add()
 
-        # Retrieve/create a sudoku board of the day
-        board_of_the_day = SudokuBoard.query.filter(SudokuBoard.user_id == user.id).first()
-        if board_of_the_day is None:
-            board_of_the_day = SudokuBoard("easy", user)
-            board_of_the_day.add()
+        except Exception:
+            abort(500)
+
         return jsonify(board_of_the_day.format()), 200
+
+    # Error Handling
+    @app.errorhandler(422)
+    def unprocessable_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": 422,
+                        "message": "unprocessable"
+                        }), 422
+
+
+    @app.errorhandler(404)
+    def page_not_found_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": 404,
+                        "message": "not found"
+                        }), 404
+
+
+    @app.errorhandler(400)
+    def bad_request_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": 400,
+                        "message": "bad request"
+                        }), 400
+
+
+    @app.errorhandler(401)
+    def unauthorized_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": 401,
+                        "message": "unauthorized"
+                        }), 401
+
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": 500,
+                        "message": "server error"
+                        }), 500
+
+
+    @app.errorhandler(AuthError)
+    def not_authorized_error(error):
+        return jsonify({
+                        "success": False,
+                        "error": error.status_code,
+                        "message": error.error
+                        }), error.status_code
 
     return app
