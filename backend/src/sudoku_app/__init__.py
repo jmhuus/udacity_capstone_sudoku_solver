@@ -109,15 +109,12 @@ boards by calling '/solve-board'!",
 
 
     # Retrieve a board from the database
-    @app.route('/board-get-user', methods=["POST"])
+    @app.route('/board-get-user/<user_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
-    def get_user_boards_from_database():
+    def get_user_boards_from_database(user_id):
         try:
-            data = json.loads(request.data)
-            user_info = data["user_info"]
-            boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+            boards = SudokuBoard.query.filter(User.auth_id == user_id)
             boards_data = [board.format() for board in boards]
-
         except Exception:
             abort(500)
 

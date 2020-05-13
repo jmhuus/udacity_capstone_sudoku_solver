@@ -67,10 +67,7 @@ export class HttpService {
         'Authorization': token
       })
     };
-    let body = {
-      "user_info": userInfo
-    }
-    return this.http.post(this.solve_url+"/board-get-user", JSON.stringify(body), httpOptions);
+    return this.http.get(this.solve_url+"/board-get-user/"+userInfo["id"], httpOptions);
   }
 
 
