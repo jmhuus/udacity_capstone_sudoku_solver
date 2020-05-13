@@ -125,7 +125,7 @@ boards by calling '/solve-board'!",
 
 
     # Save board progress
-    @app.route('/board-save', methods=["PUT"])
+    @app.route('/board-save', methods=["PATCH"])
     @requires_auth(permission="save:sudoku")
     def save_board():
         try:

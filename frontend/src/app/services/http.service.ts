@@ -57,7 +57,7 @@ export class HttpService {
       "board_json": board.board,
       "user_info":  userInfo
     }
-    return this.http.put(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
+    return this.http.patch(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
   }
 
   getUserBoards(userInfo: Object, token: string): Observable<Object> {
