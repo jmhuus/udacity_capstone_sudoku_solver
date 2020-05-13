@@ -49,26 +49,6 @@ boards by calling '/solve-board'!",
         }), 200
 
 
-    """
-    Only used to solve random board that don't exist in the database!
-    Solve the sudoku board with DFS recursion.
-    """
-    @app.route('/solve-board', methods=["POST"])
-    def solve_board():
-        try:
-            # Retrieve request data
-            data = json.loads(request.data)
-            solver = Solver(data["board_json"], 9)
-            solved_board = solver.solve()
-        except Exception:
-            abort(500)
-
-        return jsonify({
-            "success": True,
-            "board_json_solved": solved_board
-        }), 200
-
-
     # Get a new and unique board
     @app.route('/board-new', methods=["POST"])
     @requires_auth(permission="add:sudoku")
