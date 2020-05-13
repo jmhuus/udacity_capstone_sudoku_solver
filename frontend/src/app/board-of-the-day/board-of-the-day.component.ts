@@ -105,20 +105,7 @@ export class BoardOfTheDayComponent implements OnInit {
     return newBoard;
   }
 
-  // // Check if the board has been solved
-  // @HostListener('window:keyup', ['$event'])
-  // keyEvent(event: KeyboardEvent) {
-  //   this.sanitizeBoardData();
-  //   if (
-  //     JSON.parse(JSON.stringify(this.board_of_the_day.board)) ==
-  //     JSON.parse(JSON.stringify(this.board_of_the_day.board_solved))) {
-  //     this.user_message = "Solved! Congratulations";
-  //   } else {
-  //     this.user_message = "Not solved yet...";
-  //   }
-  // }
-
-
+  // Detect keyboard input in order to
   changed(event): void {
     let sanitizeBoard = this.sanitizeBoardData();
     if (

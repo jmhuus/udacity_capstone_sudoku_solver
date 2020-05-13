@@ -1,5 +1,5 @@
 <div class="container">
-  <table *ngIf="board">
+  <table *ngIf="board" (keyup)="changed($event)">
     <tr *ngFor="let row of board_size; index as i;">
         <td><input [ngClass]="setClass(0, i)" [(ngModel)]="board.board[i][0]"></td>
         <td><input [ngClass]="setClass(1, i)" [(ngModel)]="board.board[i][1]"></td>

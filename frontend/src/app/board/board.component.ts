@@ -46,9 +46,7 @@ export class BoardComponent implements OnInit {
     }
 
     solveBoard() {
-      // this.board.board = JSON.parse(JSON.stringify(this.board.board_solved));
-      console.log(this.board);
-
+      this.board.board = JSON.parse(JSON.stringify(this.board.board_solved));
     }
 
     // Retrieve a new board for the user to solve
@@ -110,16 +108,31 @@ export class BoardComponent implements OnInit {
     }
 
     // Sanitize board data; ensure that all input is the same format
-    sanitizeBoardData(): void {
-      for (let row = 0; row < Object.keys(this.board.board).length; row++) {
-        for (let column = 0; column < this.board.board[row].length; column++) {
-          const element = this.board.board[row][column];
+    sanitizeBoardData(): Board {
+      let newBoard: Board = JSON.parse(JSON.stringify(this.board));
+      for (let row = 0; row < Object.keys(newBoard.board).length; row++) {
+        for (let column = 0; column < newBoard.board[row].length; column++) {
+          const element = newBoard.board[row][column];
           if(typeof element == "string"){
-            this.board.board[row][column] = parseInt(element);
+            newBoard.board[row][column] = parseInt(element);
           } else {
-            this.board.board[row][column] = element;
+            newBoard.board[row][column] = element;
           }
         }
+      }
+
+      return newBoard;
+    }
+
+    // Detect keyboard input in order to
+    changed(event): void {
+      let sanitizeBoard = this.sanitizeBoardData();
+      if (
+        JSON.stringify(sanitizeBoard.board) ==
+        JSON.stringify(sanitizeBoard.board_solved)) {
+        this.user_message = "Solved! Congratulations";
+      } else {
+        this.user_message = "Not solved yet...";
       }
     }
 
