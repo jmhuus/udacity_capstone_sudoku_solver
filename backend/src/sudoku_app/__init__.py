@@ -19,7 +19,7 @@ def create_app():
 
 
     @app.route('/')
-    def get_greeting():
+    def get_help():
         links = []
         def has_no_empty_params(rule):
             defaults = rule.defaults if rule.defaults is not None else ()
@@ -45,7 +45,7 @@ def create_app():
             "success": True,
             "message": "Welcome to the Sudoku solver API. Start solving sudoku \
 boards by calling '/solve-board'!",
-            "endpionts": [link[0] for link in links]
+            "endpoints": [link[0] for link in links]
         }), 200
 
 
@@ -54,7 +54,6 @@ boards by calling '/solve-board'!",
     @requires_auth(permission="add:sudoku")
     def get_new_board():
         try:
-            print("request.data: ", request.data)
             data = json.loads(request.data)
 
             # Check if the user (auth_id) already exists
@@ -70,20 +69,20 @@ boards by calling '/solve-board'!",
             board = SudokuBoard(data["difficulty"], user)
             board.add()
 
+        except KeyError as ke:
+            abort(400, f"Request body is missing {ke} dictionary key.")
         except Exception as e:
-            print("error occurred...", e)
             abort(500)
 
         return jsonify(board.format()), 200
 
 
     # Retrieve a board from the database
-    @app.route('/board-get', methods=["POST"])
+    @app.route('/board-get<int:board_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
-    def get_board_from_database():
+    def get_board_from_database(board_id):
         try:
-            data = json.loads(request.data)
-            board = SudokuBoard.query.get(data["board_id"])
+            board = SudokuBoard.query.get(board_id)
         except Exception:
             abort(500)
 
@@ -178,46 +177,51 @@ boards by calling '/solve-board'!",
     # Error Handling
     @app.errorhandler(422)
     def unprocessable_error(error):
+        message = str(error) if not None else "unauthorized"
         return jsonify({
                         "success": False,
                         "error": 422,
-                        "message": "unprocessable"
+                        "message": message
                         }), 422
 
 
     @app.errorhandler(404)
     def page_not_found_error(error):
+        message = str(error) if not None else "unprocessable"
         return jsonify({
                         "success": False,
                         "error": 404,
-                        "message": "not found"
+                        "message": message
                         }), 404
 
 
     @app.errorhandler(400)
     def bad_request_error(error):
+        message = str(error) if not None else "bad request"
         return jsonify({
                         "success": False,
                         "error": 400,
-                        "message": "bad request"
+                        "message": message
                         }), 400
 
 
     @app.errorhandler(401)
     def unauthorized_error(error):
+        message = str(error) if not None else "unauthorized"
         return jsonify({
                         "success": False,
                         "error": 401,
-                        "message": "unauthorized"
+                        "message": message
                         }), 401
 
 
     @app.errorhandler(500)
     def internal_server_error(error):
+        message = str(error) if not None else "server error"
         return jsonify({
                         "success": False,
                         "error": 500,
-                        "message": "server error"
+                        "message": message
                         }), 500
 
 
