@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify, request, url_for
+from flask import Flask, jsonify, request, url_for, abort
 from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
@@ -54,6 +54,7 @@ boards by calling '/solve-board'!",
     @requires_auth(permission="add:sudoku")
     def get_new_board():
         try:
+            print("request.data: ", request.data)
             data = json.loads(request.data)
 
             # Check if the user (auth_id) already exists
@@ -69,7 +70,8 @@ boards by calling '/solve-board'!",
             board = SudokuBoard(data["difficulty"], user)
             board.add()
 
-        except Exception:
+        except Exception as e:
+            print("error occurred...", e)
             abort(500)
 
         return jsonify(board.format()), 200
