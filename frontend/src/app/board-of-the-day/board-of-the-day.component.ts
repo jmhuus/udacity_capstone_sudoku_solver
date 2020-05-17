@@ -72,13 +72,13 @@ export class BoardOfTheDayComponent implements OnInit {
 
   // Administrator's ability to change the board of the day
   saveBoard(): void {
-    this.sanitizeBoardData();
+    let board: Board = this.sanitizeBoardData();
     let userInfo = this.auth.getUserInfo();
     if (userInfo == null) {
       this.user_message = "Problem with login. Please log out and back in.";
       return;
     }
-    let response: Observable<Object> = this._http.saveBoard(this.board_of_the_day, userInfo, this.auth.getToken());
+    let response: Observable<Object> = this._http.saveBoard(board, userInfo, this.auth.getToken());
     response.subscribe(
       value => {
         this.user_message = "Saved!";
