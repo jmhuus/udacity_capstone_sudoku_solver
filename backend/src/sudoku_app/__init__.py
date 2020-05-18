@@ -78,11 +78,15 @@ boards by calling '/solve-board'!",
 
 
     # Retrieve a board from the database
-    @app.route('/board-get<int:board_id>', methods=["GET"])
+    @app.route('/board-get/<int:board_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_board_from_database(board_id):
         try:
             board = SudokuBoard.query.get(board_id)
+            if board is None:
+                raise TypeError
+        except TypeError as te:
+            abort(400, f"Request to board ID {board_id} is not found.")
         except Exception:
             abort(500)
 
@@ -93,9 +97,16 @@ boards by calling '/solve-board'!",
     @app.route('/board-get-user/<user_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database(user_id):
+        # TODO(jordanhuus): add request to payload from auth.py to ensure
+        # that the requested user is also found in the JWT claim.
+
         try:
             boards = SudokuBoard.query.filter(User.auth_id == user_id)
+            if boards.count() == 0:
+                raise TypeError
             boards_data = [board.format() for board in boards]
+        except TypeError as te:
+            abort(401, f"Request to user boards with user ID {user_id} is not authorized.")
         except Exception:
             abort(500)
 
@@ -107,10 +118,7 @@ boards by calling '/solve-board'!",
     @requires_auth(permission="save:sudoku")
     def save_board():
         try:
-            # Retrieve board model object and save
             data = json.loads(request.data)
-
-            # Check if the user (auth_id) already exists
             user_info = data["user_info"]
             user = None
             if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
@@ -128,9 +136,12 @@ boards by calling '/solve-board'!",
             boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
             boards_data = [board.format() for board in boards]
 
+        except KeyError as ke:
+            abort(400, "Request to save board is missing "+str(ke)+".")
         except Exception:
             abort(500)
 
+        # TODO(jordanhuus): include 'success': True and 'saved_board_id': 123 and 'user_boards': boards_data
         return jsonify(boards_data), 200
 
 
@@ -142,12 +153,17 @@ boards by calling '/solve-board'!",
 
             # Update the board
             board = SudokuBoard.query.get(board_id)
+            if board is None:
+                raise TypeError
             board.delete()
 
             # Return all boards
             boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
             boards_data = [board.format() for board in boards]
-        except Exception:
+
+        except TypeError as te:
+            abort(400, f"Board ID {board_id} was not found.")
+        except Exception as e:
             abort(500)
 
         return jsonify(boards_data), 200
