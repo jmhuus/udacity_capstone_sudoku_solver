@@ -29,8 +29,6 @@ export class BoardOfTheDayComponent implements OnInit {
 
     // Display the board of the day
     this.displayBoardOfTheDay();
-
-
   }
 
   // Set shading
@@ -78,7 +76,7 @@ export class BoardOfTheDayComponent implements OnInit {
       this.user_message = "Problem with login. Please log out and back in.";
       return;
     }
-    let response: Observable<Object> = this._http.saveBoard(board, userInfo, this.auth.getToken());
+    let response: Observable<Object> = this._http.saveBoardOfTheDay(board, userInfo, this.auth.getToken());
     response.subscribe(
       value => {
         this.user_message = "Saved!";

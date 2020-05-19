@@ -118,14 +118,9 @@ boards by calling '/solve-board'!",
     @requires_auth(permission="save:sudoku")
     def save_board():
         try:
+            # User info
+            payload = verify_decode_jwt(get_token_auth_header())
             data = json.loads(request.data)
-            user_info = data["user_info"]
-            user = None
-            if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
-                user = User.query.filter(User.auth_id == user_info["id"]).first()
-            else:
-                user = User(user_info["name"], user_info["name"], user_info["id"])
-                user.add()
 
             # Update the board
             board = SudokuBoard.query.get(data["board_id"])
@@ -133,7 +128,7 @@ boards by calling '/solve-board'!",
             board.update()
 
             # Return all boards
-            boards = SudokuBoard.query.filter(User.auth_id == user_info["id"])
+            boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
             boards_data = [board.format() for board in boards]
 
         except KeyError as ke:
@@ -149,6 +144,7 @@ boards by calling '/solve-board'!",
     @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
         try:
+            # User info
             payload = verify_decode_jwt(get_token_auth_header())
 
             # Update the board
@@ -189,6 +185,33 @@ boards by calling '/solve-board'!",
             abort(500)
 
         return jsonify(board_of_the_day.format()), 200
+
+
+    # Save board progress
+    @app.route('/board-of-the-day-save', methods=["PATCH"])
+    @requires_auth(permission="add:sudoku-of-the-day")
+    def save_board_of_the_day():
+        try:
+            # User info
+            payload = verify_decode_jwt(get_token_auth_header())
+            data = json.loads(request.data)
+
+            # Update the board
+            board = SudokuBoard.query.get(data["board_id"])
+            board.board_json = json.dumps(data["board_json"])
+            board.update()
+
+            # Return all boards
+            boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
+            boards_data = [board.format() for board in boards]
+
+        except KeyError as ke:
+            abort(400, "Request to save board is missing "+str(ke)+".")
+        except Exception:
+            abort(500)
+            
+        # TODO(jordanhuus): include 'success': True and 'saved_board_id': 123 and 'user_boards': boards_data
+        return jsonify(boards_data), 200
 
     # Error Handling
     @app.errorhandler(422)

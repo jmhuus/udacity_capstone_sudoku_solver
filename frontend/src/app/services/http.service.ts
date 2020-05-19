@@ -60,6 +60,23 @@ export class HttpService {
     return this.http.patch(this.solve_url+"/board-save", JSON.stringify(body), httpOptions);
   }
 
+  // Save the current boards progress
+  saveBoardOfTheDay(board: Board, userInfo: Object, token: string): Observable<Object> {
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      })
+    };
+    let body = {
+      "board_id": board.id,
+      "board_json": board.board,
+      "user_info":  userInfo
+    }
+    return this.http.patch(this.solve_url+"/board-of-the-day-save", JSON.stringify(body), httpOptions);
+  }
+
   getUserBoards(userInfo: Object, token: string): Observable<Object> {
     let httpOptions = {
       headers: new HttpHeaders({
