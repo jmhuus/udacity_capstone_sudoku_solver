@@ -136,8 +136,11 @@ boards by calling '/solve-board'!",
         except Exception:
             abort(500)
 
-        # TODO(jordanhuus): include 'success': True and 'saved_board_id': 123 and 'user_boards': boards_data
-        return jsonify(boards_data), 200
+        return jsonify({
+            "success": True,
+            "saved_board_id": board.id,
+            "user_boards": boards_data
+        }), 200
 
 
     @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
@@ -209,9 +212,12 @@ boards by calling '/solve-board'!",
             abort(400, "Request to save board is missing "+str(ke)+".")
         except Exception:
             abort(500)
-            
-        # TODO(jordanhuus): include 'success': True and 'saved_board_id': 123 and 'user_boards': boards_data
-        return jsonify(boards_data), 200
+
+        return jsonify({
+            "success": True,
+            "saved_board_id": board.id,
+            "user_boards": boards_data
+        }), 200
 
     # Error Handling
     @app.errorhandler(422)

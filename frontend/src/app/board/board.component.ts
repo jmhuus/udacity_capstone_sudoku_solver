@@ -91,8 +91,8 @@ export class BoardComponent implements OnInit {
 
           // Display list of user boards
           this.user_boards = [];
-          for (let i = 0; i < Object.keys(value).length; i++) {
-            const element = value[i];
+          for (let i = 0; i < Object.keys(value["user_boards"]).length; i++) {
+            const element = value["user_boards"][i];
             let newBoard: Board = new Board(
               element["board_id"],
               element["board_json"],
