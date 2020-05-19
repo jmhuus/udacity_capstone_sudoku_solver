@@ -437,6 +437,94 @@ class UserTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
 
+    def test_board_of_the_day_save_200(self):
+        """Ensure /board-of-the-day-save endpoint is working properly.
+        """
+
+        # TEST PREP: retrieve an existing board ID
+        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"bearer {self.gamer_jwt_token}"
+        }
+        prep_response = self.client().get("/board-of-the-day", headers=headers)
+        self.assertEqual(prep_response.status_code, 200)
+        board_of_the_day_id = prep_response.json["board_id"]
+
+        # Main test
+        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        body = {
+            "user_info":{
+                "name":"jordanhuusy@yahoo.com",
+                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
+            },
+            'board_id': board_of_the_day_id,
+            'board_json': {
+                '0': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '1': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '2': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '3': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '4': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '5': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '6': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '7': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '8': [9, 9, 9, 9, 9, 9, 9, 9, 9]
+            },
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"bearer {self.admin_jwt_token}"
+        }
+        response = self.client().patch("/board-of-the-day-save", data=json.dumps(body), headers=headers)
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["saved_board_id"], board_of_the_day_id)
+
+
+    def test_board_of_the_day_save_401_missing_permission(self):
+        """Ensure /board-of-the-day-save endpoint requires the permission 'add:sudoku-of-the-day'.
+        """
+
+        # TEST PREP: retrieve an existing board ID
+        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"bearer {self.gamer_jwt_token}"
+        }
+        prep_response = self.client().get("/board-of-the-day", headers=headers)
+        self.assertEqual(prep_response.status_code, 200)
+        board_of_the_day_id = prep_response.json["board_id"]
+
+        # Main test
+        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        body = {
+            "user_info":{
+                "name":"jordanhuusy@yahoo.com",
+                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
+            },
+            'board_id': board_of_the_day_id,
+            'board_json': {
+                '0': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '1': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '2': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '3': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '4': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '5': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '6': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '7': [9, 9, 9, 9, 9, 9, 9, 9, 9],
+                '8': [9, 9, 9, 9, 9, 9, 9, 9, 9]
+            },
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"bearer {self.gamer_jwt_token}"
+        }
+        response = self.client().patch("/board-of-the-day-save", data=json.dumps(body), headers=headers)
+        self.assertEqual(response.status_code, 401)
+
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()

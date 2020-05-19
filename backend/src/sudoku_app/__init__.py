@@ -201,12 +201,9 @@ boards by calling '/solve-board'!",
 
             # Update the board
             board = SudokuBoard.query.get(data["board_id"])
+            # TODO(jordanhuus): ensure that data["board_id"] is indeed for the Board Of The Day
             board.board_json = json.dumps(data["board_json"])
             board.update()
-
-            # Return all boards
-            boards = SudokuBoard.query.filter(User.auth_id == payload["sub"])
-            boards_data = [board.format() for board in boards]
 
         except KeyError as ke:
             abort(400, "Request to save board is missing "+str(ke)+".")
@@ -215,8 +212,7 @@ boards by calling '/solve-board'!",
 
         return jsonify({
             "success": True,
-            "saved_board_id": board.id,
-            "user_boards": boards_data
+            "saved_board_id": board.id
         }), 200
 
     # Error Handling
