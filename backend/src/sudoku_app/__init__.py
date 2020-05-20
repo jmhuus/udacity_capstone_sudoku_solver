@@ -62,6 +62,7 @@ boards by calling '/solve-board'!",
             if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
                 user = User.query.filter(User.auth_id == user_info["id"]).first()
             else:
+                # TODO(jordanhuus): change to include first_name and last_name
                 user = User(user_info["name"], user_info["name"], user_info["id"])
                 user.add()
 
@@ -94,7 +95,7 @@ boards by calling '/solve-board'!",
 
 
     # Retrieve a board from the database
-    @app.route('/board-get-user/<user_id>', methods=["GET"])
+    @app.route('/board-get-user/<string:user_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database(user_id):
         # TODO(jordanhuus): add request to payload from auth.py to ensure
