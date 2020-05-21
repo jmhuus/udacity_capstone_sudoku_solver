@@ -17,40 +17,32 @@ def create_app():
     CORS(app)
     migrate = Migrate(app, db, compare_type=True)
 
+    @app.route("/")
+    def root():
+        return "test"
 
-    @app.route('/')
+    @app.route("/help")
     def get_help():
-        links = []
-        def has_no_empty_params(rule):
-            defaults = rule.defaults if rule.defaults is not None else ()
-            arguments = rule.arguments if rule.arguments is not None else ()
-            return len(defaults) >= len(arguments)
-        for rule in app.url_map.iter_rules():
-            # Filter out rules we can't navigate to in a browser
-            # and rules that require parameters
-            if "GET" in rule.methods and has_no_empty_params(rule):
-                url = url_for(rule.endpoint, **(rule.defaults or {}))
-                links.append((url, rule.endpoint))
-            if "POST" in rule.methods and has_no_empty_params(rule):
-                url = url_for(rule.endpoint, **(rule.defaults or {}))
-                links.append((url, rule.endpoint))
-            if "DELETE" in rule.methods and has_no_empty_params(rule):
-                url = url_for(rule.endpoint, **(rule.defaults or {}))
-                links.append((url, rule.endpoint))
-            if "PUT" in rule.methods and has_no_empty_params(rule):
-                url = url_for(rule.endpoint, **(rule.defaults or {}))
-                links.append((url, rule.endpoint))
+        links = [
+            "/board-new",
+            "/board-get/<int:board_id>",
+            "/board-get-user/<string:user_id>",
+            "/board-save",
+            "/board-delete/<int:board_id>",
+            "/board-of-the-day",
+            "/board-of-the-day-save",
+        ]
 
         return jsonify({
             "success": True,
             "message": "Welcome to the Sudoku solver API. Start solving sudoku \
 boards by calling '/solve-board'!",
-            "endpoints": [link[0] for link in links]
+            "endpoints": links
         }), 200
 
 
     # Get a new and unique board
-    @app.route('/board-new', methods=["POST"])
+    @app.route("/board-new", methods=["POST"])
     @requires_auth(permission="add:sudoku")
     def get_new_board():
         try:
@@ -79,7 +71,7 @@ boards by calling '/solve-board'!",
 
 
     # Retrieve a board from the database
-    @app.route('/board-get/<int:board_id>', methods=["GET"])
+    @app.route("/board-get/<int:board_id>", methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_board_from_database(board_id):
         try:
@@ -95,7 +87,7 @@ boards by calling '/solve-board'!",
 
 
     # Retrieve a board from the database
-    @app.route('/board-get-user/<string:user_id>', methods=["GET"])
+    @app.route("/board-get-user/<string:user_id>", methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database(user_id):
 
@@ -119,7 +111,7 @@ boards by calling '/solve-board'!",
 
 
     # Save board progress
-    @app.route('/board-save', methods=["PATCH"])
+    @app.route("/board-save", methods=["PATCH"])
     @requires_auth(permission="save:sudoku")
     def save_board():
         try:
@@ -148,7 +140,7 @@ boards by calling '/solve-board'!",
         }), 200
 
 
-    @app.route('/board-delete/<int:board_id>', methods=["DELETE"])
+    @app.route("/board-delete/<int:board_id>", methods=["DELETE"])
     @requires_auth(permission="delete:sudoku")
     def delete_board(board_id):
         try:
@@ -173,7 +165,7 @@ boards by calling '/solve-board'!",
         return jsonify(boards_data), 200
 
 
-    @app.route('/board-of-the-day', methods=["GET"])
+    @app.route("/board-of-the-day", methods=["GET"])
     def get_board_of_the_day():
         try:
             # Retrieve/create fake board-of-the-day user. A user record is required
@@ -196,7 +188,7 @@ boards by calling '/solve-board'!",
 
 
     # Save board progress
-    @app.route('/board-of-the-day-save', methods=["PATCH"])
+    @app.route("/board-of-the-day-save", methods=["PATCH"])
     @requires_auth(permission="add:sudoku-of-the-day")
     def save_board_of_the_day():
         try:
