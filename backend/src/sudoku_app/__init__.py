@@ -98,8 +98,12 @@ boards by calling '/solve-board'!",
     @app.route('/board-get-user/<string:user_id>', methods=["GET"])
     @requires_auth(permission="get:sudoku")
     def get_user_boards_from_database(user_id):
-        # TODO(jordanhuus): add request to payload from auth.py to ensure
-        # that the requested user is also found in the JWT claim.
+
+        # Confirm the user_id matches the JWT claim
+        payload = verify_decode_jwt(get_token_auth_header())
+        token_claim_user_id = payload["sub"]
+        if payload["sub"] != user_id:
+            abort(401, f"Unauthorized; provided user ID, {user_id}, does not match token claim, {token_claim_user_id}.")
 
         try:
             boards = SudokuBoard.query.filter(User.auth_id == user_id)
