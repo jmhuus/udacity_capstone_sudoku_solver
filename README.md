@@ -1,13 +1,13 @@
 #### Sudoku Game API
 Welcome to the Sudoku Game API! This API allows clients to build a simple sudoku game which can create, save, remove, and solve sudoku puzzles.
 
+Visit https://jmhuus-capstone-sudoku-solver.herokuapp.com/ to play or read use the API described below!
+
 ##### API Reference
+Base URL: https://jmhuus-capstone-sudoku-solver.herokuapp.com/
 
 Endpoints:
-
-
-
-* GET `/`
+* GET `/help`
     > * Helper endpoint
     > * Provides a list of available endpoints
     > * Example Response:
