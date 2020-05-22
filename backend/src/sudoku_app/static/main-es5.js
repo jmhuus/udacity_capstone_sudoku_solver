@@ -2202,7 +2202,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           link += 'audience=' + 'sudoku-api' + '&';
           link += 'response_type=token&';
           link += 'client_id=' + 'hTHs2lbL26VDIPLLzFffuWhsoJItrYDG' + '&';
-          link += 'redirect_uri=' + 'http://localhost:4200/';
+          link += 'redirect_uri=' + 'https://jmhuus-capstone-sudoku-solver.herokuapp.com/';
           return link;
         }
       }, {
@@ -2281,7 +2281,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _classCallCheck(this, HttpService);
 
         this.http = http;
-        this.solve_url = "http://127.0.0.1:8000";
+        this.solve_url = "https://jmhuus-capstone-sudoku-solver.herokuapp.com";
       } // Post request to solve the sudoku puzzle
 
 

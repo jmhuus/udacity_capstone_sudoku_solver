@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --deleteOutputPath=true --outputPath=../backend/src/sudoku_app/static/ --deploy-url=/static/",
+    "postbuild": "mv ../backend/src/sudoku_app/static/index.html ../backend/src/sudoku_app/templates/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

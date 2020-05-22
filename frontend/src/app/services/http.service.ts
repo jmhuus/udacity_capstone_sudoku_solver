@@ -11,7 +11,7 @@ import { Board } from '../board/board';
 })
 export class HttpService {
 
-  readonly solve_url: string = "http://127.0.0.1:8000";
+  readonly solve_url: string = "https://jmhuus-capstone-sudoku-solver.herokuapp.com";
 
   constructor(private http: HttpClient) {
 

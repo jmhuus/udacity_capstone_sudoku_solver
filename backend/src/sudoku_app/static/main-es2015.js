@@ -1042,7 +1042,7 @@ class AuthService {
         link += 'audience=' + 'sudoku-api' + '&';
         link += 'response_type=token&';
         link += 'client_id=' + 'hTHs2lbL26VDIPLLzFffuWhsoJItrYDG' + '&';
-        link += 'redirect_uri=' + 'http://localhost:4200/';
+        link += 'redirect_uri=' + 'https://jmhuus-capstone-sudoku-solver.herokuapp.com/';
         return link;
     }
     getUserInfo() {
@@ -1085,7 +1085,7 @@ __webpack_require__.r(__webpack_exports__);
 class HttpService {
     constructor(http) {
         this.http = http;
-        this.solve_url = "http://127.0.0.1:8000";
+        this.solve_url = "https://jmhuus-capstone-sudoku-solver.herokuapp.com";
     }
     // Post request to solve the sudoku puzzle
     solveBoard(board) {
