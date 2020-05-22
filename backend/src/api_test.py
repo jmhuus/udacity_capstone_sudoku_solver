@@ -47,7 +47,7 @@ class UserTestCase(unittest.TestCase):
         """Ensure the base help endpoint is working properly.
         """
 
-        response = self.client().get("/")
+        response = self.client().get("/help")
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(response.json["endpoints"]), 0)
 
@@ -77,7 +77,7 @@ class UserTestCase(unittest.TestCase):
             "difficulty":"easy",
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             }
         }
@@ -100,7 +100,7 @@ class UserTestCase(unittest.TestCase):
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             }
         }
@@ -137,7 +137,7 @@ class UserTestCase(unittest.TestCase):
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             }
         }
@@ -152,11 +152,12 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: get an existing board ID
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
         }
-        prep_response = self.client().get("/board-get-user/auth0|5ebb3aecdc1d2b0c03337e77", headers=headers)
+        prep_response = self.client().get(f"/board-get-user/{user_id}", headers=headers)
         self.assertEqual(prep_response.status_code, 200)
         test_board_id = prep_response.json[0]["board_id"]
 
@@ -199,7 +200,7 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: get an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -225,8 +226,7 @@ class UserTestCase(unittest.TestCase):
         """Ensure a user can request all of their boards.
         """
 
-        # TEST PREP: get an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -241,7 +241,6 @@ class UserTestCase(unittest.TestCase):
         """Ensure 401 whent he user_id is doesn't exist. Use random user_id.
         """
 
-        # TEST PREP: get an existing board ID
         user_id = "abcdefghijklmnopqrstuvwxyz"
         headers = {
             "Content-Type": "application/json",
@@ -256,8 +255,7 @@ class UserTestCase(unittest.TestCase):
         boards. Use false token instead.
         """
 
-        # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.false_token}"
@@ -271,7 +269,7 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -281,11 +279,10 @@ class UserTestCase(unittest.TestCase):
         test_board_id = prep_response.json[0]["board_id"]
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             },
             'board_id': test_board_id,
@@ -317,7 +314,7 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -327,11 +324,10 @@ class UserTestCase(unittest.TestCase):
         test_board_id = prep_response.json[0]["board_id"]
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             },
             'board_id': test_board_id,
@@ -362,7 +358,7 @@ class UserTestCase(unittest.TestCase):
         boards_count_before = 0
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -389,7 +385,7 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
+        user_id = "a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -399,11 +395,10 @@ class UserTestCase(unittest.TestCase):
         test_board_id = prep_response.json[0]["board_id"]
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             }
         }
@@ -420,11 +415,10 @@ class UserTestCase(unittest.TestCase):
         """
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             }
         }
@@ -442,7 +436,6 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -452,11 +445,10 @@ class UserTestCase(unittest.TestCase):
         board_of_the_day_id = prep_response.json["board_id"]
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
-                "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "name":"Jordan H",
+                "id":"yTRW0CYiuMO1hjlvw06OhH7AxbWDnMKY@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             },
             'board_id': board_of_the_day_id,
@@ -487,7 +479,6 @@ class UserTestCase(unittest.TestCase):
         """
 
         # TEST PREP: retrieve an existing board ID
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
@@ -497,11 +488,10 @@ class UserTestCase(unittest.TestCase):
         board_of_the_day_id = prep_response.json["board_id"]
 
         # Main test
-        user_id = "auth0|5ebb3aecdc1d2b0c03337e77"
         body = {
             "user_info":{
                 "name":"jordanhuusy@yahoo.com",
-                "id":"auth0|5ebb3aecdc1d2b0c03337e77",
+                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
                 "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
             },
             'board_id': board_of_the_day_id,
