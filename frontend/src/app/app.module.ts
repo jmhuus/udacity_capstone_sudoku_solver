@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BoardOfTheDayComponent } from './board-of-the-day/board-of-the-day.component';
+import { ApiTokenComponent } from './api-token/api-token.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardComponent,
-    BoardOfTheDayComponent
+    BoardOfTheDayComponent,
+    ApiTokenComponent
   ],
   imports: [
     BrowserModule,
