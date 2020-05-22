@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify, request, url_for, abort
+from flask import Flask, jsonify, request, url_for, abort, render_template
 from database.models import setup_db, User, SudokuBoard, db
 from flask_cors import CORS
 from solver.solver import Solver
@@ -17,9 +17,9 @@ def create_app():
     CORS(app)
     migrate = Migrate(app, db, compare_type=True)
 
-    @app.route("/")
+    @app.route("/", methods=["GET"])
     def root():
-        return "test"
+        return render_template("index.html")
 
     @app.route("/help")
     def get_help():

@@ -1,4 +1,6 @@
+import os
+
+
 SECRET_KEY = 'thisisatest'
-SQLALCHEMY_DATABASE_URI= \
-"postgresql://jordanhuus@localhost:5432/capstone_sudoku_solver"
+SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 SQLALCHEMY_TRACK_MODIFICATIONS = True
