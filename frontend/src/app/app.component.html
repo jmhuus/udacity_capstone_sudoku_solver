@@ -5,7 +5,7 @@
             <ul>
                 <li><a href="#" routerLink="/">Board of the Day</a></li>
                 <li><a href="my-boards" routerLink="/my-boards">My Boards</a></li>
-                <li><a href="api-token" routerLink="/my-boards">API Authentication</a></li>
+                <li><a href="api-token" routerLink="/api-token">API Authentication</a></li>
                 <li *ngIf="!user_info"><a [href]="loginUrl">Login</a></li>
                 <li *ngIf="user_info"><img [src]="user_info['picture']" alt=""></li>
                 <li *ngIf="user_info"><a>{{ user_info['name'] }}</a></li>

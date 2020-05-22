@@ -8,7 +8,7 @@ import { ApiTokenComponent } from './api-token/api-token.component';
 const routes: Routes = [
   { path: '', component: BoardOfTheDayComponent},
   { path: 'my-boards', component: BoardComponent},
-  { path: 'api-token', component: BoardComponent}
+  { path: 'api-token', component: ApiTokenComponent}
 ];
 
 @NgModule({
