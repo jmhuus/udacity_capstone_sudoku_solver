@@ -36,11 +36,7 @@ export class HttpService {
         'Authorization': token
       })
     };
-    let body = {
-      "difficulty": difficulty,
-      "user_info": userInfo
-    }
-    return this.http.post(this.solve_url+"/board-new", JSON.stringify(body), httpOptions);
+    return this.http.get(this.solve_url+"/board-new/"+difficulty, httpOptions);
   }
 
   // Save the current boards progress

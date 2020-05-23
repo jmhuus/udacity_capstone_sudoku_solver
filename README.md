@@ -9,20 +9,18 @@ Visit https://jmhuus-capstone-sudoku-solver.herokuapp.com/ to play or read use t
 3. Navigate to the API Authentication page
 4. Call the API and include the copied token in the request header as 'bearer [token string]'
     * Curl Bash Example
+
+    Set the newly copied token:
   ```
-  export TOKEN=<include your copied token here> && \
+  export TOKEN=<include your copied token here>
+  ```
+  Request a new sudoku board, difficulty medium:
+  ```
   curl \
-  -X POST \
+  -X GET \
   -H 'Accept: application/json' \
   -H "Authorization: Bearer ${TOKEN}" \
-  -d '{
-  "difficulty": <'easy', 'medium', 'hard'>
-      "user_info": {
-          "id": <user id>,
-          "first_name": <user first name>,
-          "last_name": <user last name>}
-  }'
-  https://jmhuus-capstone-sudoku-solver.herokuapp.com/board-new
+  https://jmhuus-capstone-sudoku-solver.herokuapp.com/board-new/easy
   ```
 
 ##### API Reference

@@ -42,24 +42,26 @@ boards by calling '/solve-board'!",
 
 
     # Get a new and unique board
-    @app.route("/board-new", methods=["POST"])
+    @app.route("/board-new/<string:difficulty>", methods=["GET"])
     @requires_auth(permission="add:sudoku")
-    def get_new_board():
+    def get_new_board(difficulty):
         try:
-            data = json.loads(request.data)
+            payload = verify_decode_jwt(get_token_auth_header())
 
             # Check if the user (auth_id) already exists
             user = None
-            user_info = data["user_info"]
-            if User.query.filter(User.auth_id == user_info["id"]).count() > 0:
-                user = User.query.filter(User.auth_id == user_info["id"]).first()
+            user_info = payload["http://www.jordanhuus.com/user_info"]
+            if User.query.filter(User.auth_id == payload["sub"]).count() > 0:
+                user = User.query.filter(User.auth_id == payload["sub"]).first()
             else:
-                # TODO(jordanhuus): change to include first_name and last_name
-                user = User(user_info["name"], user_info["name"], user_info["id"])
+                first_name = user_info["name"].split(" ")[0]
+                last_name = first_name if len(user_info["name"].split(" "))==1 else user_info["name"].split(" ")[1]
+
+                user = User(first_name, last_name, user_info["id"])
                 user.add()
 
             # Store the newly created board
-            board = SudokuBoard(data["difficulty"], user)
+            board = SudokuBoard(difficulty, user)
             board.add()
 
         except KeyError as ke:
