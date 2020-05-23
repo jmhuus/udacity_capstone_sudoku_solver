@@ -3,6 +3,28 @@ Welcome to the Sudoku Game API! This API allows clients to build a simple sudoku
 
 Visit https://jmhuus-capstone-sudoku-solver.herokuapp.com/ to play or read use the API described below!
 
+##### API Authentication Steps
+1. Navigate to https://jmhuus-capstone-sudoku-solver.herokuapp.com/
+2. Login or register with a username/password or existing Google account
+3. Navigate to the API Authentication page
+4. Call the API and include the copied token in the request header as 'bearer [token string]'
+    * Curl Bash Example
+  ```
+  export TOKEN=<include your copied token here> && \
+  curl \
+  -X POST \
+  -H 'Accept: application/json' \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -d '{
+  "difficulty": <'easy', 'medium', 'hard'>
+      "user_info": {
+          "id": <user id>,
+          "first_name": <user first name>,
+          "last_name": <user last name>}
+  }'
+  https://jmhuus-capstone-sudoku-solver.herokuapp.com/board-new
+  ```
+
 ##### API Reference
 Base URL: https://jmhuus-capstone-sudoku-solver.herokuapp.com/
 
