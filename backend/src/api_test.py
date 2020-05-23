@@ -73,15 +73,7 @@ class UserTestCase(unittest.TestCase):
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
         }
-        body = {
-            "difficulty":"easy",
-            "user_info":{
-                "name":"jordanhuusy@yahoo.com",
-                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
-                "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
-            }
-        }
-        response = self.client().post("/board-new", data=json.dumps(body), headers=headers)
+        response = self.client().get("/board-new/easy", headers=headers)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertGreater(data["board_id"], 0)
@@ -89,41 +81,17 @@ class UserTestCase(unittest.TestCase):
 
 
     def test_board_new_400_missing_difficulty_key(self):
-        """Ensure the endpoint handles incorrect body data; missing 'difficulty'
-        from the request body.
+        """Ensure the endpoint handles incorrect API parameter; missing
+        'difficulty' in the request route.
         """
 
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.gamer_jwt_token}"
         }
-        body = {
-            "user_info":{
-                "name":"jordanhuusy@yahoo.com",
-                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
-                "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
-            }
-        }
-        response = self.client().post("/board-new", data=json.dumps(body), headers=headers)
+        response = self.client().get("/board-new", headers=headers)
         data = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
-
-
-    def test_board_new_400_missing_user_info_key(self):
-        """Ensure the endpoint handles incorrect body data; missing 'user_info'
-        from the request body.
-        """
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"bearer {self.gamer_jwt_token}"
-        }
-        body = {
-            "difficulty": "easy"
-        }
-        response = self.client().post("/board-new", data=json.dumps(body), headers=headers)
-        data = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
 
 
     def test_board_new_401_not_authorized(self):
@@ -134,14 +102,7 @@ class UserTestCase(unittest.TestCase):
             "Content-Type": "application/json",
             "Authorization": f"bearer {self.false_token}"
         }
-        body = {
-            "user_info":{
-                "name":"jordanhuusy@yahoo.com",
-                "id":"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu@clients",
-                "picture":"https://s.gravatar.com/avatar/332713e1693261e97de7da89b49e46f1?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjo.png"
-            }
-        }
-        response = self.client().post("/board-new", data=json.dumps(body), headers=headers)
+        response = self.client().get("/board-new/easy", headers=headers)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
 
