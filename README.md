@@ -29,9 +29,9 @@ Visit https://jmhuus-capstone-sudoku-solver.herokuapp.com/ to play or read use t
 * Setup backend Flask server
     1. Open terminal
     2. Step into backend directory `cd backend`
-    3. Create a new Python virtual environment `virtualenv -p python3 1.nv_<environment name>`
+    3. Create a new Python virtual environment `virtualenv -p python3 env_<environment name>`
     4. Step into virtual environment `source <environment name>/bin/activate`
-    5. Install dependencies from requirements.txt `pip install -r 1.equirements.txt`
+    5. Install dependencies from requirements.txt `pip install -r requirements.txt`
     6. Run the backend server `../setup.sh`
     7. Endpoints should be available at localhost:8000/
 * Setup frontend Angular dev server
