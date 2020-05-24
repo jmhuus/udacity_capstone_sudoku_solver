@@ -1,5 +1,5 @@
 import json
-from flask import request, _request_ctx_stack
+from flask import request
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
@@ -98,7 +98,8 @@ def check_permissions(permission, payload):
     if permission not in payload["permissions"]:
         raise AuthError({
             'code': 'invalid_permission',
-            'description': 'User does not have authorization; invalid permission provided.'
+            'description': 'User does not have authorization; invalid '
+            + 'permission provided.'
         }, 401)
 
     return True
@@ -125,16 +126,16 @@ def verify_decode_jwt(token):
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
         if 'kid' not in unverified_header:
-            raise Error
-    except Exception as e:
+            raise Exception
+    except Exception:
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization malformed.'
         }, 401)
 
-
     # Retrieve public key (RSA key)
-    jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json') # https://jordan-flask-authentication-practice.auth0.com/.well-known/jwks.json
+    # https://jordan-flask-authentication-practice.auth0.com/.well-known/jwks.json
+    jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
     for key in jwks['keys']:
         if key['kid'] == unverified_header['kid']:
@@ -167,9 +168,10 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'description': 'Incorrect claims. Please, check the '
+                + 'audience and issuer.'
             }, 401)
-        except Exception as e:
+        except Exception:
             raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to parse authentication token.'

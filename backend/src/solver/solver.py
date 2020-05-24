@@ -1,21 +1,18 @@
-import pprint as pp
-import math, random
+import pprint
+import math
+import random
 import json
 from copy import deepcopy
 
 
 class Solver():
-
-
     def __init__(self, grid, board_size):
         self.grid = self.convert_from_json(grid)
         self.MIN = 1
         self.MAX = board_size
 
-
     def __repr__(self):
         pprint.PrettyPrinter(self.grid)
-
 
     def convert_from_json(self, grid_json):
         """Returns a converted JSON formatted sudoku board into a two-
@@ -29,7 +26,7 @@ class Solver():
         """
 
         try:
-            converted_board = [0,1,2,3,4,5,6,7,8]
+            converted_board = [0, 1, 2, 3, 4, 5, 6, 7, 8]
             for row_index, row_values in grid_json.items():
                 row = []
                 for row_value in row_values:
@@ -39,11 +36,10 @@ class Solver():
                         row.append(None)
                 converted_board[int(row_index)] = row
 
-        except AttributeError as ae: # Board format already 2D list
+        except AttributeError:  # Board format already 2D list
             converted_board = grid_json
 
         return converted_board
-
 
     def solve(self):
         """
@@ -57,11 +53,10 @@ class Solver():
         """
         for row in range(9):
             for column in range(9):
-                if self.grid[row][column] == None:
+                if self.grid[row][column] is None:
                     for i in range(1, 10):
                         if self.is_solution(i, [row, column]):
                             return self.grid
-
 
     def is_solution(self, attempt_number, coordinates):
         """This is the main recursive function, calling itself on line 92. Adds
@@ -88,8 +83,9 @@ class Solver():
             return False
 
         # Find next cell coordinates
-        next_coordinate = self.get_next_available_address(coordinates[0], coordinates[1])
-        if next_coordinate is None: # The board is full of solved cells
+        next_coordinate = self.get_next_available_address(coordinates[0],
+                                                          coordinates[1])
+        if next_coordinate is None:  # The board is full of solved cells
             return True
 
         # Test next solution
@@ -100,7 +96,6 @@ class Solver():
         # All solutions attempted, none of them work
         self.grid[coordinates[0]][coordinates[1]] = None
         return False
-
 
     def get_next_available_address(self, row, col):
         """Retrieves the next empty sudoku puzzle cell coordinate.
@@ -116,27 +111,26 @@ class Solver():
 
         while True:
             # End of the board?
-            if row==8 and col==8:
+            if row == 8 and col == 8:
                 return None
 
             # End of the row
-            if col==8:
+            if col == 8:
                 row += 1
                 col = 0
             else:
                 col += 1
 
             # Next available address found, return result
-            if self.grid[row][col] == None:
+            if self.grid[row][col] is None:
                 return [row, col]
-
 
     def validate_board(self):
         # Validate each row
         for row in range(9):
 
             # Row values
-            row_list = list(filter(lambda a: a != None, self.grid[row]))
+            row_list = list(filter(lambda a: a is not None, self.grid[row]))
 
             # Test for unique
             if len(row_list) != len(set(row_list)):
@@ -148,7 +142,7 @@ class Solver():
             # Column values
             column_list = []
             for row in range(9):
-                if self.grid[row][column] != None:
+                if self.grid[row][column] is not None:
                     column_list.append(self.grid[row][column])
 
             # Test for unique
@@ -162,11 +156,12 @@ class Solver():
                 grid_list = []
 
                 # Loop through the grid, using the provided grid coordinates
-                for column in range(starting_cell_column, starting_cell_column + 3):
+                for column in range(starting_cell_column, starting_cell_column
+                                    + 3):
                     for row in range(starting_cell_row, starting_cell_row + 3):
 
                         # Check for grid duplicates
-                        if self.grid[row][column] != None:
+                        if self.grid[row][column] is not None:
                             grid_list.append(self.grid[row][column])
 
                 if len(grid_list) != len(set(grid_list)):
@@ -221,7 +216,7 @@ def generate_new_board(difficulty):
         numbers_left = 35
     elif difficulty == "medium":
         numbers_left = 45
-    else: # easy
+    else:  # easy
         numbers_left = 60
     numbers_left = 81 - numbers_left
 

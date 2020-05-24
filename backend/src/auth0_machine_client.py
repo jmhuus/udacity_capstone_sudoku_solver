@@ -12,9 +12,14 @@ import json
 
 
 def get_admin_jwt_token():
-    conn = http.client.HTTPSConnection("jordan-flask-authentication-practice.auth0.com")
-    payload = "{\"client_id\":\"yTRW0CYiuMO1hjlvw06OhH7AxbWDnMKY\",\"client_secret\":\"OvyJYUteenQPL8gsBbbC6ksQSbtG_Yjp4Pv6BjpKjVDDHM3IDv960XojImLDTOrd\",\"audience\":\"sudoku-api\",\"grant_type\":\"client_credentials\"}"
-    headers = { 'content-type': "application/json" }
+    conn = http.client.HTTPSConnection(
+        "jordan-flask-authentication-practice.auth0.com")
+    payload = \
+        "{\"client_id\":\"yTRW0CYiuMO1hjlvw06OhH7AxbWDnMKY\",\"client_secret" \
+        + "\":\"OvyJYUteenQPL8gsBbbC6ksQSbtG_Yjp4Pv6BjpKjVDDHM3IDv960XojImLD" \
+        + "TOrd\",\"audience\":\"sudoku-api\",\"grant_type\":\"client_creden" \
+        + "tials\"}"
+    headers = {'content-type': "application/json"}
     conn.request("POST", "/oauth/token", payload, headers)
     res = conn.getresponse()
     data = res.read()
@@ -23,9 +28,14 @@ def get_admin_jwt_token():
 
 
 def get_gamer_jwt_token():
-    conn = http.client.HTTPSConnection("jordan-flask-authentication-practice.auth0.com")
-    payload = "{\"client_id\":\"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu\",\"client_secret\":\"Q1D-UbCA1gJYD17GGFfm54bypM7CqHclpxPxgw04bIzy_9aO5AlMPxms57CKN3L5\",\"audience\":\"sudoku-api\",\"grant_type\":\"client_credentials\"}"
-    headers = { 'content-type': "application/json" }
+    conn = http.client.HTTPSConnection(
+        "jordan-flask-authentication-practice.auth0.com")
+    payload = \
+        "{\"client_id\":\"a5RyVox4oYemxRJHNvKslJ7uvLTigiQu\",\"client" \
+        + "_secret\":\"Q1D-UbCA1gJYD17GGFfm54bypM7CqHclpxPxgw04bIzy_9aO5AlM" \
+        + "Pxms57CKN3L5\",\"audience\":\"sudoku-api\",\"grant_type\":\"clie" \
+        + "nt_credentials\"}"
+    headers = {'content-type': "application/json"}
     conn.request("POST", "/oauth/token", payload, headers)
     res = conn.getresponse()
     data = res.read()
