@@ -26,8 +26,8 @@ class Solver():
 
         Returns:
             Two-dimensional python list sudoku board representation.
-
         """
+
         try:
             converted_board = [0,1,2,3,4,5,6,7,8]
             for row_index, row_values in grid_json.items():
@@ -64,6 +64,20 @@ class Solver():
 
 
     def is_solution(self, attempt_number, coordinates):
+        """This is the main recursive function, calling itself on line 92. Adds
+        a number to the board and checks if it violates the basic rules of
+        Sudoku.
+
+        Args:
+            attempt_number: Integer between 1 and 9 the next attempted number
+            in the given coordinate parameter.
+            coordinates: List containing the row and column of the current cell
+            in question.
+
+        Returns:
+            True or False based on the returned recursive function calls AND
+            the validate_board() function.
+        """
 
         # Place attempt_number
         self.grid[coordinates[0]][coordinates[1]] = attempt_number
@@ -89,6 +103,17 @@ class Solver():
 
 
     def get_next_available_address(self, row, col):
+        """Retrieves the next empty sudoku puzzle cell coordinate.
+
+        Args:
+            row: Integer of the current cell coordinate row.
+            col: Integer of the current cell coordinate column.
+
+        Returns:
+            List containing the [row, colum] of the next empty sudoku cell
+            coordinate.
+        """
+
         while True:
             # End of the board?
             if row==8 and col==8:
@@ -230,6 +255,7 @@ def jsonify_board(board_list):
     Returns:
         JSON string representation of a Sudoku board.
     """
+
     board = {}
     for i in range(len(board_list)):
         board[str(i)] = board_list[i]

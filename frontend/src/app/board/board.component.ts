@@ -51,7 +51,6 @@ export class BoardComponent implements OnInit {
 
     // Retrieve a new board for the user to solve
     newBoard() {
-      // TODO(jordanhuus): remove hard code
       let response: Observable<Object> = this._http.getNewBoard(
           "easy", this.auth.getUserInfo(), this.auth.getToken());
       response.subscribe(

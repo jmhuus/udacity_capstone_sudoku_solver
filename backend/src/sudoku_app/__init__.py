@@ -200,7 +200,6 @@ boards by calling '/solve-board'!",
 
             # Update the board
             board = SudokuBoard.query.get(data["board_id"])
-            # TODO(jordanhuus): ensure that data["board_id"] is indeed for the Board Of The Day
             board.board_json = json.dumps(data["board_json"])
             board.update()
 
