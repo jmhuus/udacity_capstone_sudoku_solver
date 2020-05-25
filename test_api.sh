@@ -14,4 +14,5 @@ export AUTH0_API_AUDIENCE="sudoku-api"
 
 # Run the application
 cd backend/src/
-gunicorn "sudoku_app:create_app()"
+python api_test.py
+# python random.py
