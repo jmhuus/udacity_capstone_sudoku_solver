@@ -57,10 +57,21 @@ Endpoints:
     > }
     > ```
 
-* GET `/board-new/<easy, medium, difficult>`
+* POST `/board-new`
     > * Requires *Gamer* permission
     > * Returns a newly created sudoku board based on the provided difficulty
     > * Provides a list of available endpoints
+    > * Request Data:
+    > ```
+    > {
+    >     "difficulty": <'easy', 'medium', 'hard'>
+    >     "user_info": {
+    >         "id": <user id>,
+    >         "first_name": <user first name>,
+    >         "last_name": <user last name>
+    >     }
+    > }
+    > ```
     > * Example Response:
     > ```
     > {
